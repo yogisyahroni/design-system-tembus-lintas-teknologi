@@ -21,10 +21,11 @@ Orange is an emphasis color, not a full-page background. On a typical functional
 
 Approved working assets are in `assets/brand/`:
 
-- `tembus-logo-white.png` for forest-green or dark surfaces.
+- `tembus-logo-green.webp` for light or white surfaces, including light-mode customer web, reports, and presentations.
+- `tembus-logo-white.png` for forest-green or dark surfaces, including dark mode.
 - `tembus-mark-color.png` for small brand-mark contexts where the available artwork is sufficient.
 
-Use the logo with generous clear space. Never stretch, rotate, add a drop shadow, redraw the mark, or recolor it without a documented brand review. Do not place the white logo on a light surface without a sufficient dark container.
+Use the logo with generous clear space. Never stretch, rotate, add a drop shadow, redraw the mark, or recolor it without a documented brand review. Select the logo by surface first: green on light, white on dark. Do not place the white logo on a light surface without a sufficient dark container, and do not place the green logo on a dark surface where contrast is reduced.
 
 For production print or high-resolution campaigns, replace working PNGs with the approved vector master when the brand team provides one. Do not recreate the logo from a screenshot.
 
