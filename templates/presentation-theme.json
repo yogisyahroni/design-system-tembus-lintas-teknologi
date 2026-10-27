@@ -1,6 +1,6 @@
 {
   "name": "TEMBUS Corporate 16:9",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "page": { "width": 13.333, "height": 7.5, "unit": "in" },
   "safeArea": { "top": 0.52, "right": 0.68, "bottom": 0.46, "left": 0.68, "unit": "in" },
   "fonts": {
@@ -27,6 +27,7 @@
     "error": "#B91C1C",
     "info": "#1D4ED8"
   },
+  "dataviz": ["#006437", "#C2410C", "#1D4ED8", "#7E22CE", "#0E7490", "#5F6B63"],
   "typeScalePt": {
     "coverTitle": 34,
     "slideTitle": 25,

@@ -10,8 +10,8 @@ The design system is jointly owned by Product Design and Engineering. Product te
 2. Name the token by semantic purpose, not visual color (`error`, not `red`).
 3. Define light and dark behavior or document why the token is theme-specific.
 4. Add a WCAG protected pair when the token is used for text, controls, or focus.
-5. Update CSS, TypeScript, Android mapping, and relevant docs.
-6. Run validation and record a changelog entry.
+5. Edit `tembus.tokens.json` only, then run `npm run build` to regenerate CSS, TypeScript, Kotlin, and Swift.
+6. Run `npm run validate` and record a changelog entry. Every `on-*` token and every `dataviz-*` token must have a protected pair.
 
 ## Adding a component or pattern
 

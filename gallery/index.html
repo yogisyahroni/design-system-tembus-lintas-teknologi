@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TEMBUS Design System: Galeri</title>
+<link rel="stylesheet" href="../tokens/tembus.css">
+<style>
+body{margin:0;background:var(--token-color-background);color:var(--token-color-foreground);font-size:var(--token-type-body);line-height:1.5}
+main{max-width:var(--token-content-max-width);margin:0 auto;padding:var(--token-spacing-3xl) var(--token-spacing-lg)}
+h1{font-size:var(--token-type-page-title);line-height:1.2;margin:0}
+h2{font-size:var(--token-type-section-title);margin:var(--token-spacing-3xl) 0 var(--token-spacing-lg)}
+.row{display:flex;flex-wrap:wrap;gap:var(--token-spacing-lg);align-items:flex-start}
+.card{background:var(--token-color-surface);border:1px solid var(--token-color-border);border-radius:var(--token-radius-lg);padding:var(--token-spacing-xl);box-shadow:var(--token-elevation-raised)}
+.btn{min-height:var(--token-size-min-touch-target);padding:0 var(--token-spacing-xl);border-radius:var(--token-radius-md);border:2px solid transparent;font-weight:var(--token-font-weight-semibold);cursor:pointer;transition:background var(--token-motion-fast) var(--token-motion-easing)}
+.btn-primary{background:var(--token-color-primary);color:var(--token-color-on-primary)}
+.btn-primary:hover{background:var(--token-color-primary-light);color:var(--token-color-on-primary)}
+.btn-secondary{background:var(--token-color-surface);color:var(--token-color-primary);border-color:var(--token-color-primary)}
+.btn-tertiary{background:transparent;color:var(--token-color-primary);text-decoration:underline}
+.btn-destructive{background:var(--token-color-error);color:var(--token-color-on-error)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+label{display:block;font-size:var(--token-type-label);font-weight:var(--token-font-weight-semibold);margin-bottom:var(--token-spacing-xs)}
+input{min-height:var(--token-size-min-touch-target);width:260px;padding:0 var(--token-spacing-md);border-radius:var(--token-radius-md);border:1px solid var(--token-color-input-border);background:var(--token-color-input-background);color:var(--token-color-foreground)}
+input[aria-invalid="true"]{border:2px solid var(--token-color-error)}
+.help{font-size:var(--token-type-caption);color:var(--token-color-foreground-muted);margin-top:var(--token-spacing-xs)}
+.err{color:var(--token-color-error)}
+.chip{display:inline-flex;gap:6px;align-items:center;padding:4px 12px;border-radius:var(--token-radius-pill);font-size:var(--token-type-label);font-weight:var(--token-font-weight-semibold)}
+.c-success{background:var(--token-color-success-surface);color:var(--token-color-success)}
+.c-warning{background:var(--token-color-warning-surface);color:var(--token-color-warning)}
+.c-error{background:var(--token-color-error-surface);color:var(--token-color-error)}
+.c-info{background:var(--token-color-info-surface);color:var(--token-color-info)}
+.swatch{width:120px}
+.swatch i{display:block;height:40px;border-radius:var(--token-radius-sm)}
+.swatch span{font-size:var(--token-type-caption);color:var(--token-color-foreground-secondary)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:var(--token-spacing-lg)}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><h1>TEMBUS Design System: Galeri</h1><button class="btn btn-secondary" id="theme" type="button">Ganti ke mode gelap</button></div>
+<p style="color:var(--token-color-foreground-secondary)">Semua gaya di halaman ini memakai token dari <code>tokens/tembus.css</code>. Tidak ada nilai warna yang ditulis ulang.</p>
+
+<h2>Tombol</h2>
+<div class="row">
+<button class="btn btn-primary" type="button">Pesan sekarang</button>
+<button class="btn btn-secondary" type="button">Lihat detail</button>
+<button class="btn btn-tertiary" type="button">Lewati</button>
+<button class="btn btn-destructive" type="button">Batalkan pesanan</button>
+<button class="btn btn-primary" type="button" disabled>Tidak tersedia</button>
+<button class="btn btn-primary" type="button" aria-busy="true" style="min-width:160px">Memproses…</button>
+</div>
+
+<h2>Kolom isian</h2>
+<div class="row">
+<div><label for="a">Nomor resi</label><input id="a" placeholder="TMB-000123"><div class="help">Dikirim lewat WhatsApp.</div></div>
+<div><label for="b">Nomor telepon</label><input id="b" value="0812" aria-invalid="true" aria-describedby="b-e"><div class="help err" id="b-e">Nomor telepon tidak lengkap.</div></div>
+<div><label for="c">Kota</label><input id="c" value="Jakarta" disabled></div>
+</div>
+
+<h2>Chip status</h2>
+<div class="row">
+<span class="chip c-success">✓ Selesai</span>
+<span class="chip c-info">● Dalam Perjalanan</span>
+<span class="chip c-warning">! Menunggu Pembayaran</span>
+<span class="chip c-error">✕ Dibatalkan</span>
+</div>
+
+<h2>Kartu pesanan</h2>
+<div class="card" style="max-width:420px">
+<div style="display:flex;justify-content:space-between;align-items:center"><strong>TMB-000123</strong><span class="chip c-info">● Dalam Perjalanan</span></div>
+<p style="margin:var(--token-spacing-sm) 0;color:var(--token-color-foreground-secondary)">Toko Sumber Rejeki → Jl. Melati No. 8</p>
+<p class="help" style="margin:0 0 var(--token-spacing-lg)">Estimasi tiba 14:20</p>
+<button class="btn btn-primary" type="button">Lacak kurir</button>
+</div>
+
+<h2>Warna seri grafik</h2>
+<div class="row" id="viz"></div>
+<p class="help">Warna saja tidak cukup untuk membedakan seri; selalu tambahkan label atau penanda.</p>
+</main>
+<script>
+var viz=document.getElementById('viz');
+for(var i=1;i<=6;i++){var d=document.createElement('div');d.className='swatch';d.innerHTML='<i style="background:var(--token-color-dataviz-'+i+')"></i><span>dataviz-'+i+'</span>';viz.appendChild(d);}
+var btn=document.getElementById('theme');
+btn.addEventListener('click',function(){var h=document.documentElement;var dark=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',dark?'light':'dark');btn.textContent=dark?'Ganti ke mode gelap':'Ganti ke mode terang';});
+</script>
+</body>
+</html>

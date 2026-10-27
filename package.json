@@ -1,10 +1,11 @@
 {
   "name": "@tembus/design-system",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Portable TEMBUS design tokens and corporate communication guidelines.",
+  "description": "Portable TEMBUS design tokens, platform outputs, and corporate communication guidelines.",
   "type": "module",
   "scripts": {
+    "build": "node scripts/build-tokens.mjs",
     "validate": "node scripts/validate-tokens.mjs"
   },
   "engines": {

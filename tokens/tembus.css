@@ -1,8 +1,7 @@
-/* TEMBUS Design System 0.1.0
- * Source: tembus.tokens.json
- * Use semantic variables in product code; do not copy raw palette values.
+/* TEMBUS Design System 0.2.0
+ * GENERATED FILE. Do not edit by hand.
+ * Source: tokens/tembus.tokens.json. Run `npm run build` after changing tokens.
  */
-
 :root,
 [data-theme="light"] {
   color-scheme: light;
@@ -45,6 +44,14 @@
   --token-color-info-surface: #dbeafe;
   --token-color-selection: #b7e4c7;
   --token-color-scrim: #14211a;
+  --token-color-on-primary-dark: #ffffff;
+  --token-color-on-accent-light: #241000;
+  --token-color-dataviz-1: #006437;
+  --token-color-dataviz-2: #c2410c;
+  --token-color-dataviz-3: #1d4ed8;
+  --token-color-dataviz-4: #7e22ce;
+  --token-color-dataviz-5: #0e7490;
+  --token-color-dataviz-6: #5f6b63;
 }
 
 [data-theme="dark"] {
@@ -88,6 +95,16 @@
   --token-color-info-surface: #132e52;
   --token-color-selection: #1a7a4c;
   --token-color-scrim: #000000;
+  --token-color-on-primary-dark: #ffffff;
+  --token-color-on-accent-light: #241000;
+  --token-color-dataviz-1: #34d399;
+  --token-color-dataviz-2: #fb923c;
+  --token-color-dataviz-3: #60a5fa;
+  --token-color-dataviz-4: #c084fc;
+  --token-color-dataviz-5: #22d3ee;
+  --token-color-dataviz-6: #aab5ae;
+  --token-elevation-raised: 0 4px 16px rgba(0, 0, 0, 0.40);
+  --token-elevation-overlay: 0 12px 32px rgba(0, 0, 0, 0.55);
 }
 
 :root {
@@ -103,15 +120,39 @@
   --token-radius-lg: 16px;
   --token-radius-pill: 999px;
   --token-type-display: clamp(2.25rem, 5vw, 3.75rem);
+  --token-type-display-line-height: 1.1;
+  --token-type-display-weight: 700;
   --token-type-page-title: clamp(1.75rem, 3vw, 2.25rem);
+  --token-type-page-title-line-height: 1.2;
+  --token-type-page-title-weight: 700;
   --token-type-section-title: 1.25rem;
+  --token-type-section-title-line-height: 1.5;
+  --token-type-section-title-weight: 700;
   --token-type-body: 1rem;
+  --token-type-body-line-height: 1.5;
+  --token-type-body-weight: 400;
   --token-type-body-small: 0.875rem;
+  --token-type-body-small-line-height: 1.5;
+  --token-type-body-small-weight: 400;
   --token-type-label: 0.8125rem;
+  --token-type-label-line-height: 1.25;
+  --token-type-label-weight: 600;
   --token-type-caption: 0.75rem;
+  --token-type-caption-line-height: 1.5;
+  --token-type-caption-weight: 500;
   --token-type-table-cell: 0.8125rem;
-  --token-elevation-raised: 0 4px 16px rgb(20 33 26 / 12%);
-  --token-elevation-overlay: 0 12px 32px rgb(20 33 26 / 18%);
+  --token-type-table-cell-line-height: 1.4;
+  --token-type-table-cell-weight: 400;
+  --token-font-family-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --token-font-family-document: Aptos, "Segoe UI", Arial, sans-serif;
+  --token-font-family-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --token-font-weight-regular: 400;
+  --token-font-weight-medium: 500;
+  --token-font-weight-semibold: 600;
+  --token-font-weight-bold: 700;
+  --token-elevation-none: none;
+  --token-elevation-raised: 0 4px 16px rgba(20, 33, 26, 0.12);
+  --token-elevation-overlay: 0 12px 32px rgba(20, 33, 26, 0.18);
   --token-motion-fast: 150ms;
   --token-motion-standard: 200ms;
   --token-motion-slow: 300ms;
@@ -123,12 +164,21 @@
   --token-size-icon-small: 16px;
   --token-content-max-width: 1200px;
   --token-content-grid-gap: 16px;
+  --token-palette-forest-950: #001F12;
+  --token-palette-forest-900: #002B18;
+  --token-palette-forest-800: #003A20;
+  --token-palette-forest-600: #0B6A3B;
+  --token-palette-orange-bright: #FF6A00;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+body {
+  font-family: var(--token-font-family-sans);
 }
 
 button,

@@ -1,6 +1,6 @@
 {
   "name": "TEMBUS Corporate Report A4",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "page": { "size": "A4", "orientation": "portrait", "unit": "mm" },
   "margins": { "top": 22, "right": 20, "bottom": 20, "left": 24 },
   "fonts": {
