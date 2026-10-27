@@ -1,0 +1,156 @@
+/* TEMBUS Design System 0.1.0
+ * Source: tembus.tokens.json
+ * Use semantic variables in product code; do not copy raw palette values.
+ */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --token-color-background: #f7f8f7;
+  --token-color-surface: #ffffff;
+  --token-color-surface-raised: #ffffff;
+  --token-color-surface-subtle: #eef3ef;
+  --token-color-foreground: #14211a;
+  --token-color-foreground-secondary: #415047;
+  --token-color-foreground-muted: #5f6b63;
+  --token-color-border: #c7d1ca;
+  --token-color-border-strong: #718078;
+  --token-color-input-background: #ffffff;
+  --token-color-input-border: #66756c;
+  --token-color-focus-ring: #9a3412;
+  --token-color-primary: #006437;
+  --token-color-primary-light: #007a42;
+  --token-color-primary-dark: #003a20;
+  --token-color-primary-soft: #e8f5ee;
+  --token-color-primary-pale: #f4fbf7;
+  --token-color-on-primary: #ffffff;
+  --token-color-accent: #c2410c;
+  --token-color-accent-dark: #9a3412;
+  --token-color-accent-light: #ea580c;
+  --token-color-accent-soft: #fff1e6;
+  --token-color-accent-pale: #fff8f2;
+  --token-color-on-accent: #ffffff;
+  --token-color-success: #15803d;
+  --token-color-on-success: #ffffff;
+  --token-color-success-surface: #dcfce7;
+  --token-color-warning: #b45309;
+  --token-color-on-warning: #ffffff;
+  --token-color-warning-surface: #fef3c7;
+  --token-color-error: #b91c1c;
+  --token-color-on-error: #ffffff;
+  --token-color-error-surface: #fee2e2;
+  --token-color-info: #1d4ed8;
+  --token-color-on-info: #ffffff;
+  --token-color-info-surface: #dbeafe;
+  --token-color-selection: #b7e4c7;
+  --token-color-scrim: #14211a;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --token-color-background: #0b120e;
+  --token-color-surface: #142019;
+  --token-color-surface-raised: #1b2921;
+  --token-color-surface-subtle: #203329;
+  --token-color-foreground: #f4f7f5;
+  --token-color-foreground-secondary: #d0dbd3;
+  --token-color-foreground-muted: #aab5ae;
+  --token-color-border: #4b5d52;
+  --token-color-border-strong: #71877a;
+  --token-color-input-background: #142019;
+  --token-color-input-border: #71877a;
+  --token-color-focus-ring: #fdba74;
+  --token-color-primary: #34d399;
+  --token-color-primary-light: #6ee7b7;
+  --token-color-primary-dark: #007a42;
+  --token-color-primary-soft: #123b25;
+  --token-color-primary-pale: #0d3322;
+  --token-color-on-primary: #032318;
+  --token-color-accent: #fb923c;
+  --token-color-accent-dark: #c2410c;
+  --token-color-accent-light: #fdba74;
+  --token-color-accent-soft: #4a3210;
+  --token-color-accent-pale: #3d2414;
+  --token-color-on-accent: #241000;
+  --token-color-success: #4ade80;
+  --token-color-on-success: #032318;
+  --token-color-success-surface: #123b25;
+  --token-color-warning: #fbbf24;
+  --token-color-on-warning: #241000;
+  --token-color-warning-surface: #4a3210;
+  --token-color-error: #f87171;
+  --token-color-on-error: #2a0808;
+  --token-color-error-surface: #4a1717;
+  --token-color-info: #60a5fa;
+  --token-color-on-info: #071a35;
+  --token-color-info-surface: #132e52;
+  --token-color-selection: #1a7a4c;
+  --token-color-scrim: #000000;
+}
+
+:root {
+  --token-spacing-xs: 4px;
+  --token-spacing-sm: 8px;
+  --token-spacing-md: 12px;
+  --token-spacing-lg: 16px;
+  --token-spacing-xl: 20px;
+  --token-spacing-2xl: 24px;
+  --token-spacing-3xl: 32px;
+  --token-radius-sm: 8px;
+  --token-radius-md: 12px;
+  --token-radius-lg: 16px;
+  --token-radius-pill: 999px;
+  --token-type-display: clamp(2.25rem, 5vw, 3.75rem);
+  --token-type-page-title: clamp(1.75rem, 3vw, 2.25rem);
+  --token-type-section-title: 1.25rem;
+  --token-type-body: 1rem;
+  --token-type-body-small: 0.875rem;
+  --token-type-label: 0.8125rem;
+  --token-type-caption: 0.75rem;
+  --token-type-table-cell: 0.8125rem;
+  --token-elevation-raised: 0 4px 16px rgb(20 33 26 / 12%);
+  --token-elevation-overlay: 0 12px 32px rgb(20 33 26 / 18%);
+  --token-motion-fast: 150ms;
+  --token-motion-standard: 200ms;
+  --token-motion-slow: 300ms;
+  --token-motion-easing: cubic-bezier(0.2, 0, 0, 1);
+  --token-motion-reduced: 0ms;
+  --token-size-min-touch-target: 48px;
+  --token-size-control-large: 56px;
+  --token-size-icon: 24px;
+  --token-size-icon-small: 16px;
+  --token-content-max-width: 1200px;
+  --token-content-grid-gap: 16px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid var(--token-color-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: var(--token-motion-reduced) !important;
+    animation-duration: var(--token-motion-reduced) !important;
+    animation-iteration-count: 1 !important;
+  }
+}

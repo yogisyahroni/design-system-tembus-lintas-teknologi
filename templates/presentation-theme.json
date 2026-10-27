@@ -1,0 +1,45 @@
+{
+  "name": "TEMBUS Corporate 16:9",
+  "version": "0.1.0",
+  "page": { "width": 13.333, "height": 7.5, "unit": "in" },
+  "safeArea": { "top": 0.52, "right": 0.68, "bottom": 0.46, "left": 0.68, "unit": "in" },
+  "fonts": {
+    "heading": "Aptos Display",
+    "body": "Aptos",
+    "fallback": ["Arial", "sans-serif"]
+  },
+  "colors": {
+    "forest950": "#001F12",
+    "forest900": "#002B18",
+    "forest800": "#003A20",
+    "forest600": "#0B6A3B",
+    "emerald": "#006437",
+    "emeraldLight": "#34D399",
+    "orange": "#C2410C",
+    "orangeBright": "#FF6A00",
+    "paper": "#F7F8F7",
+    "white": "#FFFFFF",
+    "ink": "#14211A",
+    "muted": "#5F6B63",
+    "line": "#C7D1CA",
+    "success": "#15803D",
+    "warning": "#B45309",
+    "error": "#B91C1C",
+    "info": "#1D4ED8"
+  },
+  "typeScalePt": {
+    "coverTitle": 34,
+    "slideTitle": 25,
+    "sectionTitle": 22,
+    "body": 16,
+    "small": 11,
+    "footnote": 9
+  },
+  "rules": {
+    "oneMessagePerSlide": true,
+    "maxAccentColorsPerSlide": 1,
+    "orangeIsForEmphasisOnly": true,
+    "includeSourceOnDataSlides": true,
+    "includeAltTextOrChartSummary": true
+  }
+}
