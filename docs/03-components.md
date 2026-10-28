@@ -1,6 +1,6 @@
 # Components
 
-This page defines the minimum contract for shared components. Teams may implement the components in their native framework, but the semantic behavior and states must remain equivalent.
+This page defines the minimum contract for shared components. Open [`gallery/index.html`](../gallery/index.html) in a browser to see the core components and their states in light and dark. Teams may implement the components in their native framework, but the semantic behavior and states must remain equivalent.
 
 ## Button
 

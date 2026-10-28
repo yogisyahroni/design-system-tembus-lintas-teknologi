@@ -1,7 +1,7 @@
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
   "product": "TEMBUS",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "sourceOfTruth": "This token file is the portable source of truth. Design-tool files may map to these semantic names, but must not introduce unregistered values.",
   "themes": {
     "light": {
@@ -43,7 +43,15 @@
         "on-info": "#FFFFFF",
         "info-surface": "#DBEAFE",
         "selection": "#B7E4C7",
-        "scrim": "#14211A"
+        "scrim": "#14211A",
+        "on-primary-dark": "#FFFFFF",
+        "on-accent-light": "#241000",
+        "dataviz-1": "#006437",
+        "dataviz-2": "#C2410C",
+        "dataviz-3": "#1D4ED8",
+        "dataviz-4": "#7E22CE",
+        "dataviz-5": "#0E7490",
+        "dataviz-6": "#5F6B63"
       }
     },
     "dark": {
@@ -85,7 +93,19 @@
         "on-info": "#071A35",
         "info-surface": "#132E52",
         "selection": "#1A7A4C",
-        "scrim": "#000000"
+        "scrim": "#000000",
+        "on-primary-dark": "#FFFFFF",
+        "on-accent-light": "#241000",
+        "dataviz-1": "#34D399",
+        "dataviz-2": "#FB923C",
+        "dataviz-3": "#60A5FA",
+        "dataviz-4": "#C084FC",
+        "dataviz-5": "#22D3EE",
+        "dataviz-6": "#AAB5AE"
+      },
+      "elevation": {
+        "raised": "0 4px 16px rgba(0, 0, 0, 0.40)",
+        "overlay": "0 12px 32px rgba(0, 0, 0, 0.55)"
       }
     }
   },
@@ -136,6 +156,80 @@
     "content": {
       "max-width": "1200px",
       "grid-gap": "16px"
+    },
+    "fontFamily": {
+      "sans": "system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "document": "Aptos, \"Segoe UI\", Arial, sans-serif",
+      "mono": "ui-monospace, \"SF Mono\", Menlo, Consolas, monospace"
+    },
+    "fontWeight": {
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    },
+    "typographyStyles": {
+      "display": {
+        "lineHeight": 1.1,
+        "weight": 700,
+        "nativeSize": 36
+      },
+      "page-title": {
+        "lineHeight": 1.2,
+        "weight": 700,
+        "nativeSize": 28
+      },
+      "section-title": {
+        "lineHeight": 1.5,
+        "weight": 700,
+        "nativeSize": 20
+      },
+      "body": {
+        "lineHeight": 1.5,
+        "weight": 400,
+        "nativeSize": 16
+      },
+      "body-small": {
+        "lineHeight": 1.5,
+        "weight": 400,
+        "nativeSize": 14
+      },
+      "label": {
+        "lineHeight": 1.25,
+        "weight": 600,
+        "nativeSize": 13
+      },
+      "caption": {
+        "lineHeight": 1.5,
+        "weight": 500,
+        "nativeSize": 12
+      },
+      "table-cell": {
+        "lineHeight": 1.4,
+        "weight": 400,
+        "nativeSize": 13
+      }
+    },
+    "palette": {
+      "forest-950": "#001F12",
+      "forest-900": "#002B18",
+      "forest-800": "#003A20",
+      "forest-600": "#0B6A3B",
+      "orange-bright": "#FF6A00"
+    },
+    "breakpoint": {
+      "sm": "640px",
+      "md": "768px",
+      "lg": "1024px",
+      "xl": "1280px"
+    },
+    "zIndex": {
+      "base": "0",
+      "dropdown": "1000",
+      "sticky": "1020",
+      "overlay": "1040",
+      "modal": "1050",
+      "toast": "1080"
     }
   },
   "wcagProtectedPairs": [
@@ -161,72 +255,29 @@
     { "foreground": "info", "background": "info-surface", "minimum": 4.5, "purpose": "status text on tinted surface" },
     { "foreground": "primary", "background": "background", "minimum": 4.5, "purpose": "brand text on page background" },
     { "foreground": "accent", "background": "background", "minimum": 4.5, "purpose": "accent text on page background" },
-    { "foreground": "focus-ring", "background": "surface-subtle", "minimum": 3, "purpose": "focus indicator on subtle surfaces" }
+    { "foreground": "focus-ring", "background": "surface-subtle", "minimum": 3, "purpose": "focus indicator on subtle surfaces" },
+    { "foreground": "on-primary-dark", "background": "primary-dark", "minimum": 4.5, "purpose": "text on deep brand surface" },
+    { "foreground": "on-accent-light", "background": "accent-light", "minimum": 4.5, "purpose": "text on light accent surface" },
+    { "foreground": "on-primary", "background": "primary-light", "minimum": 4.5, "purpose": "text on primary-light" },
+    { "foreground": "primary", "background": "surface-subtle", "minimum": 4.5, "purpose": "brand text on subtle surface" },
+    { "foreground": "foreground-muted", "background": "surface-subtle", "minimum": 4.5, "purpose": "muted text on subtle surface" },
+    { "foreground": "dataviz-1", "background": "surface", "minimum": 3, "purpose": "chart series on surface (non-text)" },
+    { "foreground": "dataviz-1", "background": "surface-subtle", "minimum": 3, "purpose": "chart series on subtle surface (non-text)" },
+    { "foreground": "dataviz-2", "background": "surface", "minimum": 3, "purpose": "chart series on surface (non-text)" },
+    { "foreground": "dataviz-2", "background": "surface-subtle", "minimum": 3, "purpose": "chart series on subtle surface (non-text)" },
+    { "foreground": "dataviz-3", "background": "surface", "minimum": 3, "purpose": "chart series on surface (non-text)" },
+    { "foreground": "dataviz-3", "background": "surface-subtle", "minimum": 3, "purpose": "chart series on subtle surface (non-text)" },
+    { "foreground": "dataviz-4", "background": "surface", "minimum": 3, "purpose": "chart series on surface (non-text)" },
+    { "foreground": "dataviz-4", "background": "surface-subtle", "minimum": 3, "purpose": "chart series on subtle surface (non-text)" },
+    { "foreground": "dataviz-5", "background": "surface", "minimum": 3, "purpose": "chart series on surface (non-text)" },
+    { "foreground": "dataviz-5", "background": "surface-subtle", "minimum": 3, "purpose": "chart series on subtle surface (non-text)" },
+    { "foreground": "dataviz-6", "background": "surface", "minimum": 3, "purpose": "chart series on surface (non-text)" },
+    { "foreground": "dataviz-6", "background": "surface-subtle", "minimum": 3, "purpose": "chart series on subtle surface (non-text)" }
   ],
   "platformMappings": {
     "cssVariablePrefix": "--token-",
-    "androidColorFile": "android-app-customer/app/src/main/java/com/tembus/customer/ui/theme/Color.kt",
     "android": {
-      "light": {
-        "background": "Background",
-        "surface": "Surface",
-        "surface-raised": "Surface",
-        "surface-subtle": "SurfaceVariant",
-        "foreground": "OnBackground",
-        "foreground-secondary": "OnSurfaceSecondary",
-        "foreground-muted": "OnSurfaceVariant",
-        "border": "Outline",
-        "border-strong": "OutlineStrong",
-        "input-background": "Surface",
-        "input-border": "InputBorder",
-        "focus-ring": "AccentDark",
-        "primary": "Primary",
-        "primary-light": "PrimaryLight",
-        "primary-dark": "PrimaryDark",
-        "primary-soft": "PrimarySoft",
-        "primary-pale": "PrimaryPale",
-        "on-primary": "OnPrimary",
-        "accent": "Accent",
-        "accent-dark": "AccentDark",
-        "accent-light": "AccentLight",
-        "accent-soft": "AccentSoft",
-        "accent-pale": "AccentPale",
-        "on-accent": "OnAccent",
-        "success": "Success",
-        "warning": "Warning",
-        "error": "Error",
-        "info": "Info"
-      },
-      "dark": {
-        "background": "DarkBackground",
-        "surface": "DarkSurface",
-        "surface-raised": "DarkSurfaceVariant",
-        "surface-subtle": "DarkSurfaceSubtle",
-        "foreground": "DarkOnBackground",
-        "foreground-secondary": "DarkOnSurfaceSecondary",
-        "foreground-muted": "DarkOnSurfaceVariant",
-        "border": "DarkOutline",
-        "border-strong": "DarkOutlineStrong",
-        "input-background": "DarkSurface",
-        "input-border": "DarkInputBorder",
-        "focus-ring": "DarkAccentLight",
-        "primary": "DarkPrimary",
-        "primary-light": "DarkPrimaryLight",
-        "primary-dark": "DarkPrimaryDark",
-        "primary-soft": "DarkPrimarySoft",
-        "primary-pale": "DarkPrimaryPale",
-        "on-primary": "DarkOnPrimary",
-        "accent": "DarkAccent",
-        "accent-dark": "DarkAccentDark",
-        "accent-light": "DarkAccentLight",
-        "accent-soft": "DarkAccentSoft",
-        "accent-pale": "DarkAccentPale",
-        "on-accent": "DarkOnAccent",
-        "success": "DarkSuccess",
-        "warning": "DarkWarning",
-        "error": "DarkError",
-        "info": "DarkInfo"
-      }
+      "nameOverrides": { "foreground": "OnBackground", "foreground-secondary": "OnSurfaceSecondary", "foreground-muted": "OnSurfaceVariant", "border": "Outline", "border-strong": "OutlineStrong", "input-border": "InputBorder" }
     }
   }
 }

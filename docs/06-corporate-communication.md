@@ -7,7 +7,7 @@ This is the shared visual and editorial system for proposals, board reports, bus
 - One message per slide.
 - Use a dark forest-green title or section slide for navigation, not every slide.
 - Keep normal content on an off-white or white surface.
-- Use orange for one decision, metric, or CTA—not as decoration.
+- Use orange for one decision, metric, or CTA—not as decoration. `palette.orange-bright` (`#FF6A00`) is the brand orange for large display text, shapes, and highlights on dark green fields; use `accent` (`#C2410C`) for orange text or buttons on light surfaces.
 - Prefer a short headline plus evidence over a paragraph wall.
 - Put source, period, and owner on data slides.
 
@@ -51,6 +51,7 @@ Reports should include page numbers, document version, confidentiality classific
 - Label values directly when possible.
 - Never use color alone to distinguish series or status.
 - Include an accessible text summary for every chart.
+- Series colors come from the `dataviz` tokens; see [Data visualization](09-data-visualization.md).
 
 ## Voice
 

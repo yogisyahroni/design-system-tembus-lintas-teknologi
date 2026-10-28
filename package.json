@@ -1,11 +1,42 @@
 {
   "name": "@tembus/design-system",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "private": true,
-  "description": "Portable TEMBUS design tokens and corporate communication guidelines.",
+  "description": "Portable TEMBUS design tokens, platform outputs, and corporate communication guidelines.",
   "type": "module",
+  "main": "./tokens/tembus.ts",
+  "module": "./tokens/tembus.ts",
+  "types": "./tokens/tembus.ts",
+  "exports": {
+    ".": {
+      "types": "./tokens/tembus.ts",
+      "import": "./tokens/tembus.ts",
+      "default": "./tokens/tembus.ts"
+    },
+    "./css": "./tokens/tembus.css",
+    "./tokens": {
+      "types": "./tokens/tembus.ts",
+      "import": "./tokens/tembus.ts",
+      "default": "./tokens/tembus.ts"
+    },
+    "./tokens.json": "./tokens/tembus.tokens.json",
+    "./tailwind": "./tokens/tembus.tailwind.cjs",
+    "./icons": {
+      "types": "./tokens/tembus.icons.ts",
+      "import": "./tokens/tembus.icons.ts",
+      "default": "./tokens/tembus.icons.ts"
+    }
+  },
+  "files": [
+    "tokens",
+    "templates",
+    "assets"
+  ],
   "scripts": {
-    "validate": "node scripts/validate-tokens.mjs"
+    "build": "node scripts/build-tokens.mjs && node scripts/build-icons.mjs",
+    "validate": "node scripts/validate-tokens.mjs",
+    "generate:deck": "node scripts/generate-deck.mjs",
+    "test:gallery": "node --test scripts/test-gallery-runtime.mjs"
   },
   "engines": {
     "node": ">=20"

@@ -12,16 +12,18 @@ This repository is the portable source of truth for the TEMBUS design language. 
 2. Use [Design foundations](docs/02-design-foundations.md) for color, type, spacing, shape, motion, and accessibility.
 3. Use [Components](docs/03-components.md) and [Patterns](docs/04-patterns.md) before creating a new UI pattern.
 4. Use [Corporate communication](docs/06-corporate-communication.md) for PPT, reports, charts, and executive documents.
-5. Run `npm run validate` before committing token changes.
+5. Use [Data visualization](docs/09-data-visualization.md) for charts.
+6. Run `npm run build` then `npm run validate` before committing token changes.
 
 ## Repository map
 
 ```text
 tokens/
-  tembus.tokens.json     Canonical semantic tokens and WCAG protected pairs
-  tembus.css             Web CSS variables and utility primitives
-  tembus.ts              TypeScript token exports
-  tembus.android.kt      Jetpack Compose starter mapping
+  tembus.tokens.json     Canonical semantic tokens and WCAG protected pairs (edit this)
+  tembus.css             Generated: web CSS variables and base rules
+  tembus.ts              Generated: TypeScript token exports
+  tembus.android.kt      Generated: Jetpack Compose colors, type, spacing
+  tembus.swift           Generated: SwiftUI colors, type, spacing
 docs/
   01-brand-foundations.md
   02-design-foundations.md
@@ -31,16 +33,21 @@ docs/
   06-corporate-communication.md
   07-accessibility.md
   08-governance.md
+  09-data-visualization.md
 assets/brand/             Approved working logo assets
 templates/
   presentation-theme.json
   report-style.json
-scripts/validate-tokens.mjs
+gallery/index.html        Live component and state gallery (open in a browser)
+scripts/
+  build-tokens.mjs        Generates all platform outputs from the token file
+  validate-tokens.mjs     Contrast, parity, template, and sync checks
+.github/workflows/        CI runs build + validate on every pull request
 ```
 
 ## Source-of-truth rule
 
-`tokens/tembus.tokens.json` owns semantic values. The CSS, TypeScript, and Android files are platform outputs and must stay aligned with it. If a product needs a new value, add a semantic token first, document its purpose, and update the platform outputs in the same change.
+`tokens/tembus.tokens.json` owns semantic values. The CSS, TypeScript, Kotlin, and Swift files are generated from it by `npm run build`; never edit them by hand. If a product needs a new value, add a semantic token first, document its purpose, run `npm run build`, and commit the regenerated files in the same change. CI fails if they drift.
 
 Do not hardcode a new hex value in an application to solve a one-off visual issue. Prefer an existing semantic token; if it is genuinely missing, propose the token in this repository.
 
@@ -63,6 +70,7 @@ The system is designed for Customer, Courier, Merchant, Admin, landing pages, pa
 - [ ] Keyboard, focus, screen-reader, and touch behavior are documented.
 - [ ] Empty, loading, error, and disabled states are covered.
 - [ ] Corporate/reporting implications are considered if the pattern is reused outside an app.
+- [ ] `npm run build` was run and generated files are committed.
 - [ ] `npm run validate` passes.
 
 ## License and ownership

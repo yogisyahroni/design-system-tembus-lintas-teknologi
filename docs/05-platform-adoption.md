@@ -2,33 +2,70 @@
 
 ## Web
 
-Import [`tokens/tembus.css`](../tokens/tembus.css) at the application boundary and use semantic variables:
+Import the CSS tokens at your application entrypoint:
+
+```javascript
+// In your main application or layout file:
+import '@tembus/design-system/css';
+```
+
+Or reference directly in HTML/CSS:
 
 ```css
+@import '@tembus/design-system/css';
+
 .primary-action {
   background: var(--token-color-primary);
   color: var(--token-color-on-primary);
   border-radius: var(--token-radius-md);
+  z-index: var(--token-z-index-base);
 }
 ```
 
 Do not copy values into component CSS. If a framework has its own theme system, map the semantic variables once at the adapter boundary.
 
-## TypeScript
+## TypeScript & JavaScript
 
-Use [`tokens/tembus.ts`](../tokens/tembus.ts) for non-CSS consumers, chart configuration, or typed design-system adapters. Keep semantic names stable so consumers do not depend on raw palette names.
+Use the typed token package for programmatic styling, chart configuration, or design-system adapters:
+
+```typescript
+import { tembusTokens, tembusThemes, tembusGlobal } from '@tembus/design-system';
+
+const brandGreen = tembusThemes.light.color.primary;
+const modalZIndex = tembusGlobal.zIndex.modal; // 1050
+```
+
+## Generated outputs
+
+`tokens/tembus.css`, `tembus.ts`, `tembus.android.kt`, and `tembus.swift` are generated from `tembus.tokens.json`. Never edit them by hand. Run `npm run build` after changing a token; `npm run validate` and CI fail if any output is out of date.
 
 ## Android / Jetpack Compose
 
-[`tokens/tembus.android.kt`](../tokens/tembus.android.kt) is a platform-neutral starter mapping. Product modules should map these values into their existing Material theme or runtime token layer rather than introducing a second color source.
+[`tokens/tembus.android.kt`](../tokens/tembus.android.kt) provides light and dark color objects, spacing, radius, size, `TextStyle` typography, elevation, and motion durations. Product modules should map these values into their existing Material theme rather than introducing a second color source.
 
 Minimum requirements:
 
 - light and dark `ColorScheme`;
-- semantic `Typography` styles;
+- semantic `Typography` styles from `TembusTypography`;
 - 48dp minimum touch target;
 - platform focus and accessibility semantics;
 - dynamic content descriptions for operational icons.
+
+Color names follow the token name in PascalCase (`PrimaryDark`, `Dataviz1`). A few legacy names are kept via `platformMappings.android.nameOverrides` (for example `foreground` is `OnBackground`).
+
+## iOS / SwiftUI
+
+[`tokens/tembus.swift`](../tokens/tembus.swift) exposes `TembusColor` (dynamic light/dark `Color`), `TembusSpacing`, `TembusRadius`, `TembusSize`, `TembusMotion`, and `TembusTypography`. Apply a text style with `.tembusText(TembusTypography.body)`.
+
+```swift
+Text("Selesai")
+    .tembusText(TembusTypography.label)
+    .foregroundStyle(TembusColor.onSuccess)
+    .padding(TembusSpacing.sm)
+    .background(TembusColor.success)
+```
+
+Use the system font and Dynamic Type; the native sizes are the base size at the default text size. The Swift and Kotlin outputs are generated but not compiled in this repository's CI; build them once in the consuming app when adopting.
 
 ## Reports and documents
 
@@ -36,8 +73,8 @@ Use [`templates/report-style.json`](../templates/report-style.json) as the basel
 
 ## Presentations
 
-Use [`templates/presentation-theme.json`](../templates/presentation-theme.json) for PPTX generation. Apply the same hierarchy in speaker notes, chart legends, and tables. A slide is not allowed to introduce an unregistered brand color merely because a chart needs another series; use the documented data-visualization extension rules in the corporate guide.
+Use [`templates/presentation-theme.json`](../templates/presentation-theme.json) for PPTX generation. Apply the same hierarchy in speaker notes, chart legends, and tables. A slide is not allowed to introduce an unregistered brand color merely because a chart needs another series; use the `dataviz` series in [Data visualization](09-data-visualization.md). Template colors are checked against the token file by `npm run validate`.
 
 ## Data visualization
 
-Use sequential neutral/green scales for magnitude and semantic colors only for status. For categorical series, pair color with labels or patterns. Always provide a text summary for charts used in reports or dashboards.
+Follow [Data visualization](09-data-visualization.md).
