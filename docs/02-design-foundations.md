@@ -99,6 +99,31 @@ Use borders and tonal surfaces before shadows. `raised` is for cards; `overlay` 
 
 Motion must explain a state change. Never animate a critical tracking or payment status in a way that delays comprehension.
 
+## Breakpoints
+
+Standard responsive layout thresholds across web and adaptive native screens:
+
+| Token | Value | Target Screen |
+|---|---:|---|
+| `breakpoint.sm` | `640px` | Large mobile / phablets |
+| `breakpoint.md` | `768px` | Tablets portrait |
+| `breakpoint.lg` | `1024px` | Tablets landscape / small laptops |
+| `breakpoint.xl` | `1280px` | Desktop workstations |
+
+## Layering and Z-Index
+
+Maintain predictable stacking contexts across overlays, navigation, and floating notifications:
+
+| Token | Value | Purpose |
+|---|---:|---|
+| `zIndex.base` | `0` | Standard page flow and canvas |
+| `zIndex.dropdown` | `1000` | Contextual menus, select popovers, autocomplete |
+| `zIndex.sticky` | `1020` | Fixed headers, sticky navigation bars |
+| `zIndex.overlay` | `1040` | Backdrop scrims, drawer sheets, bottom sheets |
+| `zIndex.modal` | `1050` | Dialog boxes, confirmation modals |
+| `zIndex.toast` | `1080` | High-priority toast notifications, alerts |
+
 ## Iconography
 
 Use rounded linear icons with an optical stroke around 1.8–2px. Filled icons are reserved for active navigation, state emphasis, or a compact service illustration. Every meaningful icon button needs an accessible name and a visible focus state.
+

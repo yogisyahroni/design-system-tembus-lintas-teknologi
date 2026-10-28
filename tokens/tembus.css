@@ -1,4 +1,4 @@
-/* TEMBUS Design System 0.2.0
+/* TEMBUS Design System 0.2.1
  * GENERATED FILE. Do not edit by hand.
  * Source: tokens/tembus.tokens.json. Run `npm run build` after changing tokens.
  */
@@ -169,6 +169,16 @@
   --token-palette-forest-800: #003A20;
   --token-palette-forest-600: #0B6A3B;
   --token-palette-orange-bright: #FF6A00;
+  --token-breakpoint-sm: 640px;
+  --token-breakpoint-md: 768px;
+  --token-breakpoint-lg: 1024px;
+  --token-breakpoint-xl: 1280px;
+  --token-z-index-base: 0;
+  --token-z-index-dropdown: 1000;
+  --token-z-index-sticky: 1020;
+  --token-z-index-overlay: 1040;
+  --token-z-index-modal: 1050;
+  --token-z-index-toast: 1080;
 }
 
 *,

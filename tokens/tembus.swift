@@ -1,4 +1,4 @@
-// TEMBUS Design System 0.2.0
+// TEMBUS Design System 0.2.1
 // GENERATED FILE. Do not edit by hand.
 // Source: tokens/tembus.tokens.json. Run `npm run build` after changing tokens.
 import SwiftUI
@@ -84,6 +84,22 @@ public enum TembusMotion {
     public static let standard: Double = 0.2
     public static let slow: Double = 0.3
     public static let reduced: Double = 0
+}
+
+public enum TembusBreakpoint {
+    public static let sm: CGFloat = 640
+    public static let md: CGFloat = 768
+    public static let lg: CGFloat = 1024
+    public static let xl: CGFloat = 1280
+}
+
+public enum TembusZIndex {
+    public static let base: Int = 0
+    public static let dropdown: Int = 1000
+    public static let sticky: Int = 1020
+    public static let overlay: Int = 1040
+    public static let modal: Int = 1050
+    public static let toast: Int = 1080
 }
 
 public struct TembusTextStyle {

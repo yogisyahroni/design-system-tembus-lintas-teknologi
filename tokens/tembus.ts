@@ -1,4 +1,4 @@
-/** TEMBUS Design System 0.2.0
+/** TEMBUS Design System 0.2.1
  * GENERATED FILE. Do not edit by hand.
  * Source: tokens/tembus.tokens.json. Run `npm run build` after changing tokens.
  */
@@ -217,9 +217,23 @@ export const tembusGlobal = {
     forest600: '#0B6A3B',
     orangeBright: '#FF6A00',
   },
+  breakpoint: {
+    sm: '640px',
+    md: '768px',
+    lg: '1024px',
+    xl: '1280px',
+  },
+  zIndex: {
+    base: '0',
+    dropdown: '1000',
+    sticky: '1020',
+    overlay: '1040',
+    modal: '1050',
+    toast: '1080',
+  },
 } as const;
 
 export type TembusThemeName = keyof typeof tembusThemes;
 export type TembusColorToken = keyof typeof tembusThemes.light.color;
 
-export const tembusTokens = { version: '0.2.0', themes: tembusThemes, global: tembusGlobal } as const;
+export const tembusTokens = { version: '0.2.1', themes: tembusThemes, global: tembusGlobal } as const;

@@ -45,7 +45,7 @@ ${group('elevation', g.elevation)}
 ${group('motion', g.motion)}
 ${group('size', g.size)}
 ${group('content', g.content)}
-${group('palette', g.palette)}
+${group('palette', g.palette)}${g.breakpoint ? `\n${group('breakpoint', g.breakpoint)}` : ''}${g.zIndex ? `\n${group('z-index', g.zIndex)}` : ''}
 }
 
 *,
@@ -112,6 +112,7 @@ function kotlin(d) {
   const colors = (t, o) => `object ${o} {\n${Object.entries(d.themes[t].color).map(([k, v]) => `    val ${name(k)} = Color(0xFF${hexInt(v)})`).join('\n')}\n}`;
   const g = d.global;
   const dpObj = (o, n) => `object ${n} {\n${Object.entries(o).map(([k, v]) => `    val ${pascal(k)} = ${k === 'pill' ? '999' : px(v)}.dp`).join('\n')}\n}`;
+  const intObj = (o, n) => `object ${n} {\n${Object.entries(o).map(([k, v]) => `    const val ${pascal(k)} = ${Number.parseInt(v, 10)}`).join('\n')}\n}`;
   const weight = { 400: 'Normal', 500: 'Medium', 600: 'SemiBold', 700: 'Bold' };
   const type = Object.entries(g.typographyStyles).map(([k, s]) => `    val ${pascal(k)} = TextStyle(fontSize = ${s.nativeSize}.sp, lineHeight = ${Math.round(s.nativeSize * s.lineHeight * 10) / 10}.sp, fontWeight = FontWeight.${weight[s.weight]})`).join('\n');
   const elev = Object.entries(g.elevation).filter(([k]) => k !== 'none').map(([k, v]) => `    val ${pascal(k)} = ${v.split(' ')[1].replace('px', '')}.dp`).join('\n');
@@ -146,6 +147,7 @@ ${elev}
 object TembusMotion {
 ${motion}
 }
+${g.breakpoint ? `\n${dpObj(g.breakpoint, 'TembusBreakpoint')}\n` : ''}${g.zIndex ? `\n${intObj(g.zIndex, 'TembusZIndex')}\n` : ''}
 `;
 }
 
@@ -153,6 +155,7 @@ function swift(d) {
   const g = d.global;
   const colors = Object.keys(d.themes.light.color).map((k) => `    public static let ${camel(k)} = Color(light: 0x${hexInt(d.themes.light.color[k])}, dark: 0x${hexInt(d.themes.dark.color[k])})`).join('\n');
   const cg = (o) => Object.entries(o).map(([k, v]) => `    public static let ${k === '2xl' ? 'xxl' : k === '3xl' ? 'xxxl' : camel(k)}: CGFloat = ${k === 'pill' ? 999 : px(v)}`).join('\n');
+  const intEnum = (o) => Object.entries(o).map(([k, v]) => `    public static let ${camel(k)}: Int = ${Number.parseInt(v, 10)}`).join('\n');
   const weight = { 400: '.regular', 500: '.medium', 600: '.semibold', 700: '.bold' };
   const type = Object.entries(g.typographyStyles).map(([k, s]) => `    public static let ${camel(k)} = TembusTextStyle(size: ${s.nativeSize}, lineHeight: ${Math.round(s.nativeSize * s.lineHeight * 10) / 10}, weight: ${weight[s.weight]})`).join('\n');
   const motion = Object.entries(g.motion).filter(([k]) => k !== 'easing').map(([k, v]) => `    public static let ${camel(k)}: Double = ${ms(v) / 1000}`).join('\n');
@@ -181,7 +184,7 @@ ${cg(g.size)}
 public enum TembusMotion {
 ${motion}
 }
-
+${g.breakpoint ? `\npublic enum TembusBreakpoint {\n${cg(g.breakpoint)}\n}\n` : ''}${g.zIndex ? `\npublic enum TembusZIndex {\n${intEnum(g.zIndex)}\n}\n` : ''}
 public struct TembusTextStyle {
     public let size: CGFloat
     public let lineHeight: CGFloat
@@ -235,12 +238,46 @@ private extension UIColor {
 `;
 }
 
+function tailwind(d) {
+  const g = d.global;
+  const colorEntries = Object.keys(d.themes.light.color).map((k) => `        '${k}': 'var(--token-color-${k})',`).join('\n');
+  const spacingEntries = Object.keys(g.spacing).map((k) => `        '${k}': 'var(--token-spacing-${k})',`).join('\n');
+  const radiusEntries = Object.keys(g.radius).map((k) => `        '${k}': 'var(--token-radius-${k})',`).join('\n');
+  const zIndexEntries = g.zIndex ? Object.keys(g.zIndex).map((k) => `        '${k}': 'var(--token-z-index-${k})',`).join('\n') : '';
+  const screenEntries = g.breakpoint ? Object.entries(g.breakpoint).map(([k, v]) => `        '${k}': '${v}',`).join('\n') : '';
+
+  return `/** ${header(d.version, ['', ' *', ' */']).trimStart()}
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+${colorEntries}
+      },
+      spacing: {
+${spacingEntries}
+      },
+      borderRadius: {
+${radiusEntries}
+      },
+      zIndex: {
+${zIndexEntries}
+      },
+      screens: {
+${screenEntries}
+      },
+    },
+  },
+};
+`;
+}
+
 export function generate(d) {
   return {
     'tokens/tembus.css': css(d),
     'tokens/tembus.ts': ts(d),
     'tokens/tembus.android.kt': kotlin(d),
     'tokens/tembus.swift': swift(d),
+    'tokens/tembus.tailwind.cjs': tailwind(d),
   };
 }
 

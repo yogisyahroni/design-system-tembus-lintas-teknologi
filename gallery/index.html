@@ -3,85 +3,3438 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TEMBUS Design System: Galeri</title>
+<title>TEMBUS Design System — Component & Token Gallery</title>
 <link rel="stylesheet" href="../tokens/tembus.css">
 <style>
-body{margin:0;background:var(--token-color-background);color:var(--token-color-foreground);font-size:var(--token-type-body);line-height:1.5}
-main{max-width:var(--token-content-max-width);margin:0 auto;padding:var(--token-spacing-3xl) var(--token-spacing-lg)}
-h1{font-size:var(--token-type-page-title);line-height:1.2;margin:0}
-h2{font-size:var(--token-type-section-title);margin:var(--token-spacing-3xl) 0 var(--token-spacing-lg)}
-.row{display:flex;flex-wrap:wrap;gap:var(--token-spacing-lg);align-items:flex-start}
-.card{background:var(--token-color-surface);border:1px solid var(--token-color-border);border-radius:var(--token-radius-lg);padding:var(--token-spacing-xl);box-shadow:var(--token-elevation-raised)}
-.btn{min-height:var(--token-size-min-touch-target);padding:0 var(--token-spacing-xl);border-radius:var(--token-radius-md);border:2px solid transparent;font-weight:var(--token-font-weight-semibold);cursor:pointer;transition:background var(--token-motion-fast) var(--token-motion-easing)}
-.btn-primary{background:var(--token-color-primary);color:var(--token-color-on-primary)}
-.btn-primary:hover{background:var(--token-color-primary-light);color:var(--token-color-on-primary)}
-.btn-secondary{background:var(--token-color-surface);color:var(--token-color-primary);border-color:var(--token-color-primary)}
-.btn-tertiary{background:transparent;color:var(--token-color-primary);text-decoration:underline}
-.btn-destructive{background:var(--token-color-error);color:var(--token-color-on-error)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-label{display:block;font-size:var(--token-type-label);font-weight:var(--token-font-weight-semibold);margin-bottom:var(--token-spacing-xs)}
-input{min-height:var(--token-size-min-touch-target);width:260px;padding:0 var(--token-spacing-md);border-radius:var(--token-radius-md);border:1px solid var(--token-color-input-border);background:var(--token-color-input-background);color:var(--token-color-foreground)}
-input[aria-invalid="true"]{border:2px solid var(--token-color-error)}
-.help{font-size:var(--token-type-caption);color:var(--token-color-foreground-muted);margin-top:var(--token-spacing-xs)}
-.err{color:var(--token-color-error)}
-.chip{display:inline-flex;gap:6px;align-items:center;padding:4px 12px;border-radius:var(--token-radius-pill);font-size:var(--token-type-label);font-weight:var(--token-font-weight-semibold)}
-.c-success{background:var(--token-color-success-surface);color:var(--token-color-success)}
-.c-warning{background:var(--token-color-warning-surface);color:var(--token-color-warning)}
-.c-error{background:var(--token-color-error-surface);color:var(--token-color-error)}
-.c-info{background:var(--token-color-info-surface);color:var(--token-color-info)}
-.swatch{width:120px}
-.swatch i{display:block;height:40px;border-radius:var(--token-radius-sm)}
-.swatch span{font-size:var(--token-type-caption);color:var(--token-color-foreground-secondary)}
-.top{display:flex;justify-content:space-between;align-items:center;gap:var(--token-spacing-lg)}
+/* Reset & Base Foundation */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --gallery-nav-height: 72px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 3px solid var(--token-color-focus-ring);
+  outline-offset: 3px;
+}
+
+button {
+  font: inherit;
+}
+
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: var(--token-spacing-md);
+  z-index: var(--token-z-index-toast);
+  padding: var(--token-spacing-sm) var(--token-spacing-md);
+  border-radius: var(--token-radius-md);
+  background: var(--token-color-primary);
+  color: var(--token-color-on-primary);
+  text-decoration: none;
+  font-weight: var(--token-font-weight-semibold);
+  transition: top var(--token-motion-fast) var(--token-motion-easing);
+}
+
+.skip-link:focus {
+  top: var(--token-spacing-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background-color: var(--token-color-background);
+  color: var(--token-color-foreground);
+  font-family: var(--token-font-family-sans);
+  font-size: var(--token-type-body);
+  line-height: var(--token-type-body-line-height);
+  font-weight: var(--token-type-body-weight);
+  transition: background-color var(--token-motion-standard) var(--token-motion-easing),
+              color var(--token-motion-standard) var(--token-motion-easing);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* App Header & Navigation Bar (Sticky with Z-Index) */
+.header-bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--token-z-index-sticky);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background-color: color-mix(in srgb, var(--token-color-background) 85%, transparent);
+  border-bottom: 1px solid var(--token-color-border);
+  transition: background-color var(--token-motion-standard) var(--token-motion-easing),
+              border-color var(--token-motion-standard) var(--token-motion-easing);
+}
+
+[data-theme="dark"] .header-bar {
+  background-color: color-mix(in srgb, var(--token-color-background) 85%, transparent);
+}
+
+.header-container {
+  max-width: var(--token-content-max-width);
+  margin: 0 auto;
+  padding: var(--token-spacing-md) var(--token-spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--token-spacing-lg);
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: var(--token-spacing-md);
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-logo-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo-img {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.logo-dark {
+  display: none;
+}
+
+[data-theme="dark"] .logo-light {
+  display: none;
+}
+
+[data-theme="dark"] .logo-dark {
+  display: block;
+}
+
+.brand-title {
+  font-size: 1.125rem;
+  font-weight: var(--token-font-weight-bold);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.brand-subtitle {
+  font-size: var(--token-type-caption);
+  color: var(--token-color-foreground-secondary);
+  margin: 0;
+}
+
+.version-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--token-radius-pill);
+  font-size: 0.75rem;
+  font-weight: var(--token-font-weight-semibold);
+  background-color: var(--token-color-primary-soft);
+  color: var(--token-color-primary);
+  border: 1px solid var(--token-color-border);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--token-spacing-md);
+}
+
+/* Category Filter Bar */
+.category-nav {
+  display: flex;
+  gap: var(--token-spacing-xs);
+  overflow-x: auto;
+  padding: var(--token-spacing-xs) 0;
+  max-width: 100%;
+}
+
+.nav-pill {
+  padding: var(--token-spacing-xs) var(--token-spacing-md);
+  border-radius: var(--token-radius-pill);
+  font-size: var(--token-type-label);
+  font-weight: var(--token-font-weight-semibold);
+  border: 1px solid var(--token-color-border);
+  background: var(--token-color-surface);
+  color: var(--token-color-foreground-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all var(--token-motion-fast) var(--token-motion-easing);
+  cursor: pointer;
+}
+
+.nav-pill:hover {
+  background: var(--token-color-surface-subtle);
+  color: var(--token-color-foreground);
+  border-color: var(--token-color-border-strong);
+}
+
+.nav-pill.active {
+  background: var(--token-color-primary);
+  color: var(--token-color-on-primary);
+  border-color: var(--token-color-primary);
+}
+
+/* Layout Container */
+main {
+  max-width: var(--token-content-max-width);
+  margin: 0 auto;
+  padding: var(--token-spacing-2xl) var(--token-spacing-lg) var(--token-spacing-3xl);
+}
+
+/* Hero Section */
+.hero-card {
+  background: linear-gradient(135deg, var(--token-color-primary-soft) 0%, var(--token-color-surface) 100%);
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-lg);
+  padding: var(--token-spacing-2xl);
+  margin-bottom: var(--token-spacing-3xl);
+  box-shadow: var(--token-elevation-raised);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--token-spacing-xl);
+}
+
+.hero-copy h1 {
+  font-size: var(--token-type-page-title);
+  line-height: var(--token-type-page-title-line-height);
+  font-weight: var(--token-type-page-title-weight);
+  margin: 0 0 var(--token-spacing-xs);
+  letter-spacing: -0.025em;
+}
+
+.hero-copy p {
+  color: var(--token-color-foreground-secondary);
+  margin: 0;
+  max-width: 640px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: var(--token-spacing-xl);
+}
+
+.stat-box {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: var(--token-font-weight-bold);
+  color: var(--token-color-primary);
+}
+
+.stat-label {
+  font-size: var(--token-type-caption);
+  color: var(--token-color-foreground-muted);
+}
+
+/* Section Architecture */
+section {
+  margin-bottom: var(--token-spacing-3xl);
+  scroll-margin-top: calc(var(--gallery-nav-height) + 24px);
+}
+
+.section-header {
+  border-bottom: 1px solid var(--token-color-border);
+  padding-bottom: var(--token-spacing-sm);
+  margin-bottom: var(--token-spacing-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.section-header h2 {
+  font-size: var(--token-type-section-title);
+  line-height: var(--token-type-section-title-line-height);
+  font-weight: var(--token-type-section-title-weight);
+  margin: 0;
+  letter-spacing: -0.015em;
+}
+
+.section-desc {
+  font-size: var(--token-type-body-small);
+  color: var(--token-color-foreground-secondary);
+  margin: var(--token-spacing-xs) 0 0;
+}
+
+/* Grid & Cards */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--token-spacing-xl);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--token-spacing-lg);
+}
+
+.card {
+  background-color: var(--token-color-surface);
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-lg);
+  padding: var(--token-spacing-xl);
+  box-shadow: var(--token-elevation-raised);
+  transition: transform var(--token-motion-fast) var(--token-motion-easing),
+              box-shadow var(--token-motion-fast) var(--token-motion-easing);
+}
+
+.card:hover {
+  box-shadow: var(--token-elevation-overlay);
+}
+
+.card-title {
+  font-size: 1.0625rem;
+  font-weight: var(--token-font-weight-bold);
+  margin: 0 0 var(--token-spacing-xs);
+}
+
+.card-subtitle {
+  font-size: var(--token-type-body-small);
+  color: var(--token-color-foreground-secondary);
+  margin: 0 0 var(--token-spacing-lg);
+}
+
+/* Button Component Styles */
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--token-spacing-md);
+  align-items: center;
+}
+
+.btn {
+  min-height: var(--token-size-min-touch-target);
+  padding: 0 var(--token-spacing-xl);
+  border-radius: var(--token-radius-md);
+  border: 2px solid transparent;
+  font-family: inherit;
+  font-size: var(--token-type-body-small);
+  font-weight: var(--token-font-weight-semibold);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--token-spacing-sm);
+  text-decoration: none;
+  transition: all var(--token-motion-fast) var(--token-motion-easing);
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-primary {
+  background-color: var(--token-color-primary);
+  color: var(--token-color-on-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--token-color-primary-light);
+}
+
+.btn-secondary {
+  background-color: var(--token-color-surface);
+  color: var(--token-color-primary);
+  border-color: var(--token-color-primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--token-color-primary-soft);
+}
+
+.btn-accent {
+  background-color: var(--token-color-accent);
+  color: var(--token-color-on-accent);
+}
+
+.btn-accent:hover:not(:disabled) {
+  background-color: var(--token-color-accent-light);
+}
+
+.btn-tertiary {
+  background-color: transparent;
+  color: var(--token-color-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.btn-tertiary:hover:not(:disabled) {
+  background-color: var(--token-color-surface-subtle);
+}
+
+.btn-destructive {
+  background-color: var(--token-color-error);
+  color: var(--token-color-on-error);
+}
+
+.btn-destructive:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.btn-icon {
+  width: var(--token-size-min-touch-target);
+  height: var(--token-size-min-touch-target);
+  padding: 0;
+  border-radius: var(--token-radius-md);
+}
+
+/* Spinner Loader */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Form & Input Components */
+.form-group {
+  margin-bottom: var(--token-spacing-lg);
+}
+
+label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--token-type-label);
+  font-weight: var(--token-font-weight-semibold);
+  margin-bottom: var(--token-spacing-xs);
+  color: var(--token-color-foreground);
+}
+
+.input-control {
+  min-height: var(--token-size-min-touch-target);
+  width: 100%;
+  padding: 0 var(--token-spacing-md);
+  border-radius: var(--token-radius-md);
+  border: 1px solid var(--token-color-input-border);
+  background-color: var(--token-color-input-background);
+  color: var(--token-color-foreground);
+  font-family: inherit;
+  font-size: var(--token-type-body);
+  transition: border-color var(--token-motion-fast) var(--token-motion-easing),
+              box-shadow var(--token-motion-fast) var(--token-motion-easing);
+}
+
+.input-control:focus {
+  outline: none;
+  border-color: var(--token-color-focus-ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-color-focus-ring) 25%, transparent);
+}
+
+.input-control[aria-invalid="true"] {
+  border-color: var(--token-color-error);
+  border-width: 2px;
+}
+
+.input-control:disabled {
+  opacity: 0.55;
+  background-color: var(--token-color-surface-subtle);
+  cursor: not-allowed;
+}
+
+.helper-text {
+  font-size: var(--token-type-caption);
+  color: var(--token-color-foreground-muted);
+  margin-top: var(--token-spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--token-spacing-xs);
+}
+
+.helper-text.err {
+  color: var(--token-color-error);
+  font-weight: var(--token-font-weight-medium);
+}
+
+/* Status Chips */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--token-spacing-sm);
+}
+
+.chip {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: var(--token-radius-pill);
+  font-size: var(--token-type-label);
+  font-weight: var(--token-font-weight-semibold);
+  letter-spacing: 0.01em;
+}
+
+.chip-success {
+  background-color: var(--token-color-success-surface);
+  color: var(--token-color-success);
+  border: 1px solid color-mix(in srgb, var(--token-color-success) 20%, transparent);
+}
+
+.chip-warning {
+  background-color: var(--token-color-warning-surface);
+  color: var(--token-color-warning);
+  border: 1px solid color-mix(in srgb, var(--token-color-warning) 20%, transparent);
+}
+
+.chip-error {
+  background-color: var(--token-color-error-surface);
+  color: var(--token-color-error);
+  border: 1px solid color-mix(in srgb, var(--token-color-error) 20%, transparent);
+}
+
+.chip-info {
+  background-color: var(--token-color-info-surface);
+  color: var(--token-color-info);
+  border: 1px solid color-mix(in srgb, var(--token-color-info) 20%, transparent);
+}
+
+.chip-neutral {
+  background-color: var(--token-color-surface-subtle);
+  color: var(--token-color-foreground-secondary);
+  border: 1px solid var(--token-color-border);
+}
+
+/* Order Tracking Card (Product Pattern) */
+.order-tracking-card {
+  border-left: 4px solid var(--token-color-primary);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--token-spacing-md);
+}
+
+.order-code {
+  font-family: var(--token-font-family-mono);
+  font-weight: var(--token-font-weight-bold);
+  font-size: 1.125rem;
+}
+
+.timeline {
+  margin: var(--token-spacing-lg) 0;
+  padding-left: var(--token-spacing-lg);
+  border-left: 2px solid var(--token-color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--token-spacing-md);
+}
+
+.timeline-step {
+  position: relative;
+}
+
+.timeline-step::before {
+  content: "";
+  position: absolute;
+  left: calc(-1 * var(--token-spacing-lg) - 5px);
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--token-color-primary);
+}
+
+.timeline-step.pending::before {
+  background-color: var(--token-color-border-strong);
+}
+
+.step-label {
+  font-size: var(--token-type-body-small);
+  font-weight: var(--token-font-weight-semibold);
+}
+
+.step-detail {
+  font-size: var(--token-type-caption);
+  color: var(--token-color-foreground-secondary);
+}
+
+/* Data Visualization Color Swatches */
+.dataviz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--token-spacing-md);
+}
+
+.dataviz-swatch {
+  background-color: var(--token-color-surface);
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-md);
+  padding: var(--token-spacing-sm);
+  cursor: pointer;
+  transition: transform var(--token-motion-fast) var(--token-motion-easing);
+}
+
+.dataviz-swatch:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--token-elevation-raised);
+}
+
+.swatch-color {
+  height: 56px;
+  border-radius: var(--token-radius-sm);
+  margin-bottom: var(--token-spacing-sm);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: var(--token-spacing-xs);
+}
+
+.swatch-contrast-badge {
+  background: color-mix(in srgb, var(--token-color-scrim) 65%, transparent);
+  color: var(--token-color-on-primary-dark);
+  font-size: 0.6875rem;
+  font-weight: var(--token-font-weight-semibold);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.swatch-name {
+  font-size: var(--token-type-label);
+  font-weight: var(--token-font-weight-semibold);
+}
+
+.swatch-desc {
+  font-size: var(--token-type-caption);
+  color: var(--token-color-foreground-muted);
+}
+
+/* Skeleton Loading Feedback State */
+.skeleton-box {
+  background: linear-gradient(90deg, var(--token-color-surface-subtle) 25%, var(--token-color-border) 50%, var(--token-color-surface-subtle) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--token-radius-sm);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Interactive Overlay Demos (Modal & Toast using z-index tokens) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--token-z-index-overlay);
+  background-color: color-mix(in srgb, var(--token-color-scrim) 60%, transparent);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--token-spacing-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--token-motion-standard) var(--token-motion-easing);
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-dialog {
+  background-color: var(--token-color-surface);
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-lg);
+  max-width: 480px;
+  width: 100%;
+  padding: var(--token-spacing-2xl);
+  box-shadow: var(--token-elevation-overlay);
+  z-index: var(--token-z-index-modal);
+  transform: scale(0.95);
+  transition: transform var(--token-motion-standard) var(--token-motion-easing);
+}
+
+.modal-backdrop.open .modal-dialog {
+  transform: scale(1);
+}
+
+/* Toast Notification (Z-Index Toast) */
+.toast-container {
+  position: fixed;
+  bottom: var(--token-spacing-2xl);
+  right: var(--token-spacing-2xl);
+  z-index: var(--token-z-index-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--token-spacing-sm);
+  pointer-events: none;
+}
+
+.toast {
+  background-color: var(--token-color-surface);
+  color: var(--token-color-foreground);
+  border: 1px solid var(--token-color-border);
+  border-left: 4px solid var(--token-color-primary);
+  border-radius: var(--token-radius-md);
+  padding: var(--token-spacing-md) var(--token-spacing-lg);
+  box-shadow: var(--token-elevation-overlay);
+  display: flex;
+  align-items: center;
+  gap: var(--token-spacing-md);
+  min-width: 280px;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all var(--token-motion-standard) var(--token-motion-easing);
+  pointer-events: auto;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Presentation & Deck 16:9 Showcase */
+.deck-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--token-spacing-md);
+  margin-bottom: var(--token-spacing-lg);
+}
+
+.slide-tabs {
+  display: flex;
+  gap: var(--token-spacing-xs);
+  flex-wrap: wrap;
+}
+
+.slide-tab {
+  padding: var(--token-spacing-xs) var(--token-spacing-md);
+  border-radius: var(--token-radius-pill);
+  font-size: var(--token-type-label);
+  font-weight: var(--token-font-weight-semibold);
+  border: 1px solid var(--token-color-border);
+  background: var(--token-color-surface);
+  color: var(--token-color-foreground-secondary);
+  cursor: pointer;
+  transition: all var(--token-motion-fast) var(--token-motion-easing);
+}
+
+.slide-tab:hover {
+  background: var(--token-color-surface-subtle);
+  color: var(--token-color-foreground);
+}
+
+.slide-tab.active {
+  background: var(--token-color-primary);
+  color: var(--token-color-on-primary);
+  border-color: var(--token-color-primary);
+}
+
+.slide-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--token-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--token-elevation-overlay);
+  border: 1px solid var(--token-color-border);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-content {
+  display: none;
+  width: 100%;
+  height: 100%;
+  padding: 4.5% 6.5%;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  animation: slideFadeIn 0.25s ease-in-out;
+}
+
+.slide-content.active {
+  display: flex;
+}
+
+@keyframes slideFadeIn {
+  from { opacity: 0; transform: scale(0.995); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Slide 1 - Cover (Dark Forest-950) */
+.slide-cover-bg {
+  background-color: var(--token-palette-forest-950);
+  color: var(--token-color-on-primary-dark);
+  position: relative;
+}
+
+.slide-cover-accent-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 10px;
+  background-color: var(--token-palette-orange-bright);
+}
+
+/* Slide 2 - KPI (Light Surface) */
+.slide-light-bg {
+  background-color: var(--token-color-background);
+  color: var(--token-color-foreground);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--token-spacing-lg);
+  margin: auto 0;
+}
+
+.kpi-card {
+  background: var(--token-color-surface);
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-md);
+  padding: var(--token-spacing-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.kpi-card.highlight {
+  border: 2px solid var(--token-color-accent);
+  background: var(--token-color-accent-pale);
+}
+
+.kpi-num {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: var(--token-font-weight-bold);
+  line-height: 1.1;
+  margin-bottom: var(--token-spacing-xs);
+}
+
+/* Mini Bar Chart in Evidence Slide */
+.slide-bar-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--token-spacing-sm);
+  margin: auto 0;
+}
+
+.slide-bar-row {
+  display: flex;
+  align-items: center;
+  gap: var(--token-spacing-md);
+}
+
+.slide-bar-label {
+  width: 140px;
+  font-size: var(--token-type-caption);
+  font-weight: var(--token-font-weight-semibold);
+  white-space: nowrap;
+}
+
+.slide-bar-track {
+  flex: 1;
+  height: 24px;
+  background: var(--token-color-surface-subtle);
+  border-radius: var(--token-radius-sm);
+  overflow: hidden;
+  position: relative;
+}
+
+.slide-bar-fill {
+  height: 100%;
+  border-radius: var(--token-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: var(--token-spacing-xs);
+  color: var(--token-color-on-primary-dark);
+  font-size: 0.6875rem;
+  font-weight: var(--token-font-weight-bold);
+}
+
+/* Icon Grid & Cards */
+.icons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--token-spacing-md);
+}
+
+.icon-card {
+  background: var(--token-color-surface);
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-md);
+  padding: var(--token-spacing-lg) var(--token-spacing-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--token-spacing-sm);
+  cursor: pointer;
+  transition: all var(--token-motion-fast) var(--token-motion-easing);
+  text-align: center;
+}
+
+.icon-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--token-color-primary);
+  box-shadow: var(--token-elevation-raised);
+}
+
+.icon-card svg {
+  width: 28px;
+  height: 28px;
+  color: var(--token-color-primary);
+  transition: transform var(--token-motion-fast) var(--token-motion-easing);
+}
+
+.icon-card:hover svg {
+  transform: scale(1.15);
+}
+
+.icon-card-name {
+  font-size: var(--token-type-caption);
+  font-family: var(--token-font-family-mono);
+  font-weight: var(--token-font-weight-medium);
+  color: var(--token-color-foreground);
+}
+
+/* Multi-Framework Code Snippet Box */
+.code-viewer {
+  margin-top: var(--token-spacing-lg);
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-md);
+  overflow: hidden;
+  background-color: var(--token-palette-forest-950);
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--token-palette-forest-900);
+  padding: var(--token-spacing-xs) var(--token-spacing-md);
+  border-bottom: 1px solid color-mix(in srgb, var(--token-color-on-primary-dark) 10%, transparent);
+}
+
+.code-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.code-tab {
+  background: transparent;
+  border: none;
+  color: color-mix(in srgb, var(--token-color-on-primary-dark) 72%, transparent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--token-motion-fast) var(--token-motion-easing);
+}
+
+.code-tab.active {
+  background: var(--token-color-primary);
+  color: var(--token-color-on-primary-dark);
+}
+
+.code-pre {
+  margin: 0;
+  padding: var(--token-spacing-md);
+  color: var(--token-color-on-primary-dark);
+  font-family: var(--token-font-family-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+/* Contrast Calculator Card */
+.contrast-calc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--token-spacing-xl);
+  align-items: center;
+}
+
+.contrast-meter-score {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--token-spacing-xs);
+}
+
+.contrast-badge-row {
+  display: flex;
+  gap: var(--token-spacing-xs);
+  flex-wrap: wrap;
+  margin-top: var(--token-spacing-sm);
+}
+
+.contrast-pill {
+  padding: 3px 10px;
+  border-radius: var(--token-radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.contrast-pass {
+  background: var(--token-color-success-surface);
+  color: var(--token-color-success);
+  border: 1px solid color-mix(in srgb, var(--token-color-success) 30%, transparent);
+}
+
+.contrast-fail {
+  background: var(--token-color-error-surface);
+  color: var(--token-color-error);
+  border: 1px solid color-mix(in srgb, var(--token-color-error) 30%, transparent);
+}
+
+/* ── Icon Gallery Section ── */
+.icon-search-bar {
+  display: flex;
+  gap: var(--token-spacing-md);
+  align-items: center;
+  margin-bottom: var(--token-spacing-lg);
+  flex-wrap: wrap;
+}
+
+.icon-search-input {
+  flex: 1;
+  min-width: 180px;
+  min-height: 40px;
+  padding: 0 var(--token-spacing-md);
+  border-radius: var(--token-radius-md);
+  border: 1px solid var(--token-color-input-border);
+  background-color: var(--token-color-input-background);
+  color: var(--token-color-foreground);
+  font-family: inherit;
+  font-size: var(--token-type-body-small);
+}
+
+.icon-search-input:focus-visible {
+  outline: 3px solid var(--token-color-focus-ring);
+  outline-offset: 2px;
+  border-color: var(--token-color-focus-ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-color-focus-ring) 20%, transparent);
+}
+
+.icon-size-btn {
+  padding: var(--token-spacing-xs) var(--token-spacing-md);
+  border-radius: var(--token-radius-pill);
+  font-size: var(--token-type-label);
+  font-weight: var(--token-font-weight-semibold);
+  border: 1px solid var(--token-color-border);
+  background: var(--token-color-surface);
+  color: var(--token-color-foreground-secondary);
+  cursor: pointer;
+  transition: all var(--token-motion-fast) var(--token-motion-easing);
+}
+
+.icon-size-btn.active {
+  background: var(--token-color-primary);
+  color: var(--token-color-on-primary);
+  border-color: var(--token-color-primary);
+}
+
+.icon-color-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform var(--token-motion-fast) var(--token-motion-easing);
+}
+
+.icon-color-btn.active {
+  border-color: var(--token-color-foreground);
+  transform: scale(1.2);
+}
+
+.icons-grid-main {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: var(--token-spacing-md);
+}
+
+.icon-card-main {
+  background: var(--token-color-surface);
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-md);
+  padding: var(--token-spacing-lg) var(--token-spacing-sm) var(--token-spacing-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--token-spacing-sm);
+  cursor: pointer;
+  transition: all var(--token-motion-fast) var(--token-motion-easing);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 150px;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.icon-card-main:hover {
+  border-color: var(--token-color-primary);
+  box-shadow: var(--token-elevation-raised);
+  transform: translateY(-2px);
+}
+
+.icon-card-main.selected {
+  border-color: var(--token-color-primary);
+  background: var(--token-color-primary-soft);
+  box-shadow: 0 0 0 2px var(--token-color-primary);
+}
+
+.icon-card-main .icon-name {
+  font-size: 0.6875rem;
+  font-family: var(--token-font-family-mono);
+  color: var(--token-color-foreground-secondary);
+  line-height: 1.3;
+  word-break: break-all;
+}
+
+.icon-detail-panel {
+  margin-top: var(--token-spacing-lg);
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-md);
+  overflow: hidden;
+  display: none;
+}
+
+.icon-detail-panel.open {
+  display: block;
+}
+
+.icon-detail-header {
+  display: flex;
+  align-items: center;
+  gap: var(--token-spacing-lg);
+  padding: var(--token-spacing-lg);
+  background: var(--token-color-surface-subtle);
+  border-bottom: 1px solid var(--token-color-border);
+}
+
+.icon-preview-box {
+  background: var(--token-color-surface);
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-md);
+  padding: var(--token-spacing-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  min-height: 80px;
+}
+
+.icon-preview-box svg {
+  width: 40px;
+  height: 40px;
+}
+
+/* ── Code Snippet Generator ── */
+.snippet-selector {
+  display: flex;
+  gap: var(--token-spacing-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--token-spacing-lg);
+}
+
+.snippet-comp-btn {
+  padding: var(--token-spacing-sm) var(--token-spacing-lg);
+  border-radius: var(--token-radius-pill);
+  font-size: var(--token-type-label);
+  font-weight: var(--token-font-weight-semibold);
+  border: 1.5px solid var(--token-color-border);
+  background: var(--token-color-surface);
+  color: var(--token-color-foreground-secondary);
+  cursor: pointer;
+  transition: all var(--token-motion-fast) var(--token-motion-easing);
+}
+
+.snippet-comp-btn:hover {
+  border-color: var(--token-color-primary);
+  color: var(--token-color-primary);
+  background: var(--token-color-primary-soft);
+}
+
+.snippet-comp-btn.active {
+  background: var(--token-color-primary);
+  color: var(--token-color-on-primary);
+  border-color: var(--token-color-primary);
+}
+
+.snippet-preview-area {
+  background: var(--token-color-surface-subtle);
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-md);
+  padding: var(--token-spacing-xl);
+  margin-bottom: var(--token-spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  gap: var(--token-spacing-md);
+  flex-wrap: wrap;
+}
+
+.copy-btn {
+  padding: var(--token-spacing-xs) var(--token-spacing-md);
+  border-radius: var(--token-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid color-mix(in srgb, var(--token-color-on-primary-dark) 20%, transparent);
+  background: color-mix(in srgb, var(--token-color-on-primary-dark) 10%, transparent);
+  color: var(--token-color-on-primary-dark);
+  cursor: pointer;
+  transition: all var(--token-motion-fast) var(--token-motion-easing);
+  white-space: nowrap;
+}
+
+.copy-btn:hover {
+  background: color-mix(in srgb, var(--token-color-on-primary-dark) 20%, transparent);
+}
+
+.copy-btn.copied {
+  background: var(--token-color-success-surface);
+  color: var(--token-color-success);
+  border-color: var(--token-color-success);
+}
+
+/* ── Tailwind Preset Section ── */
+.tailwind-meta-row {
+  display: flex;
+  gap: var(--token-spacing-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--token-spacing-lg);
+}
+
+.tailwind-badge {
+  padding: var(--token-spacing-xs) var(--token-spacing-md);
+  border-radius: var(--token-radius-pill);
+  font-size: var(--token-type-label);
+  font-weight: var(--token-font-weight-semibold);
+  background: var(--token-color-primary-soft);
+  color: var(--token-color-primary);
+  border: 1px solid color-mix(in srgb, var(--token-color-primary) 20%, transparent);
+}
+
+.tw-swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--token-spacing-sm);
+  margin-bottom: var(--token-spacing-lg);
+}
+
+.tw-swatch {
+  border: 1px solid var(--token-color-border);
+  border-radius: var(--token-radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--token-motion-fast) var(--token-motion-easing);
+}
+
+.tw-swatch:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--token-elevation-raised);
+}
+
+.tw-swatch-color {
+  height: 36px;
+}
+
+.tw-swatch-label {
+  padding: 4px var(--token-spacing-xs);
+  font-size: 0.65rem;
+  font-family: var(--token-font-family-mono);
+  color: var(--token-color-foreground-secondary);
+  background: var(--token-color-surface);
+  line-height: 1.4;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .hero-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--token-spacing-sm);
+  }
+  .top-row-controls {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+}
 </style>
 </head>
 <body>
-<main>
-<div class="top"><h1>TEMBUS Design System: Galeri</h1><button class="btn btn-secondary" id="theme" type="button">Ganti ke mode gelap</button></div>
-<p style="color:var(--token-color-foreground-secondary)">Semua gaya di halaman ini memakai token dari <code>tokens/tembus.css</code>. Tidak ada nilai warna yang ditulis ulang.</p>
 
-<h2>Tombol</h2>
-<div class="row">
-<button class="btn btn-primary" type="button">Pesan sekarang</button>
-<button class="btn btn-secondary" type="button">Lihat detail</button>
-<button class="btn btn-tertiary" type="button">Lewati</button>
-<button class="btn btn-destructive" type="button">Batalkan pesanan</button>
-<button class="btn btn-primary" type="button" disabled>Tidak tersedia</button>
-<button class="btn btn-primary" type="button" aria-busy="true" style="min-width:160px">Memproses…</button>
-</div>
+<a class="skip-link" href="#main-content">Lewati ke konten utama</a>
 
-<h2>Kolom isian</h2>
-<div class="row">
-<div><label for="a">Nomor resi</label><input id="a" placeholder="TMB-000123"><div class="help">Dikirim lewat WhatsApp.</div></div>
-<div><label for="b">Nomor telepon</label><input id="b" value="0812" aria-invalid="true" aria-describedby="b-e"><div class="help err" id="b-e">Nomor telepon tidak lengkap.</div></div>
-<div><label for="c">Kota</label><input id="c" value="Jakarta" disabled></div>
-</div>
+<!-- Header Navigation Bar (Sticky with zIndex.sticky) -->
+<header class="header-bar" role="banner">
+  <div class="header-container">
+    <div style="display: flex; align-items: center; gap: var(--token-spacing-lg); width: 100%; justify-content: space-between;">
+      <a href="#" class="brand-lockup">
+        <div class="brand-logo-wrapper">
+          <img src="../assets/brand/tembus-logo-green.webp" alt="TEMBUS Logo" class="brand-logo-img logo-light" height="32">
+          <img src="../assets/brand/tembus-logo-white-wordmark.webp" alt="TEMBUS Logo" class="brand-logo-img logo-dark" height="32">
+        </div>
+        <div style="border-left: 1px solid var(--token-color-border); padding-left: var(--token-spacing-md); margin-left: var(--token-spacing-xs);">
+          <div style="display: flex; align-items: center; gap: var(--token-spacing-xs);">
+            <h2 class="brand-title">Design System</h2>
+            <span class="version-tag">v0.2.1</span>
+          </div>
+          <p class="brand-subtitle">Lebih Dekat, Lebih Cepat</p>
+        </div>
+      </a>
+      
+      <div class="nav-actions">
+        <button class="btn btn-secondary" id="theme-toggle" type="button" aria-label="Ganti tema tampilan">
+          <span id="theme-icon">&#9790;</span> <span id="theme-text">Mode Gelap</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
 
-<h2>Chip status</h2>
-<div class="row">
-<span class="chip c-success">✓ Selesai</span>
-<span class="chip c-info">● Dalam Perjalanan</span>
-<span class="chip c-warning">! Menunggu Pembayaran</span>
-<span class="chip c-error">✕ Dibatalkan</span>
-</div>
+<main id="main-content" role="main">
+  <!-- Hero Section -->
+  <div class="hero-card">
+    <div class="hero-copy">
+      <h1>Galeri Sistem Desain</h1>
+      <p>Kompilasi interaktif spesifikasi token, komponen, dan pola operasional TEMBUS. Semua visual terikat langsung pada single source of truth <code>tokens/tembus.tokens.json</code>.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-box">
+        <div class="stat-value">40</div>
+        <div class="stat-label">WCAG Protected Pairs</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Platform Targets</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value">48px</div>
+        <div class="stat-label">Min Touch Target</div>
+      </div>
+    </div>
+  </div>
 
-<h2>Kartu pesanan</h2>
-<div class="card" style="max-width:420px">
-<div style="display:flex;justify-content:space-between;align-items:center"><strong>TMB-000123</strong><span class="chip c-info">● Dalam Perjalanan</span></div>
-<p style="margin:var(--token-spacing-sm) 0;color:var(--token-color-foreground-secondary)">Toko Sumber Rejeki → Jl. Melati No. 8</p>
-<p class="help" style="margin:0 0 var(--token-spacing-lg)">Estimasi tiba 14:20</p>
-<button class="btn btn-primary" type="button">Lacak kurir</button>
-</div>
+  <!-- Interactive Filter Category Pills -->
+  <nav class="category-nav" aria-label="Filter komponen">
+    <a href="#brand-assets" class="nav-pill active">Identitas & Logo Brand</a>
+    <a href="#icons-gallery" class="nav-pill">Ikon Vektor (20 SVG)</a>
+    <a href="#snippet-generator" class="nav-pill">Code Snippet</a>
+    <a href="#tailwind-preset" class="nav-pill">Tailwind Preset</a>
+    <a href="#deck-template" class="nav-pill">Template Presentasi 16:9</a>
+    <a href="#buttons" class="nav-pill">Tombol & Aksi</a>
+    <a href="#inputs" class="nav-pill">Kolom Isian & Form</a>
+    <a href="#chips" class="nav-pill">Status Chip</a>
+    <a href="#patterns" class="nav-pill">Pola Kartu Pesanan</a>
+    <a href="#overlays" class="nav-pill">Overlays & Z-Index</a>
+    <a href="#dataviz" class="nav-pill">Data Visualization</a>
+    <a href="#contrast-tool" class="nav-pill">Kalkulator Kontras WCAG</a>
+  </nav>
 
-<h2>Warna seri grafik</h2>
-<div class="row" id="viz"></div>
-<p class="help">Warna saja tidak cukup untuk membedakan seri; selalu tambahkan label atau penanda.</p>
+  <!-- Section 0: Brand & Logo Assets -->
+  <section id="brand-assets">
+    <div class="section-header">
+      <div>
+        <h2>Identitas & Aset Logo Brand</h2>
+        <div class="section-desc">Aset logo resmi TEMBUS untuk berbagai latar permukaan, media cetak, laporan, dan aplikasi digital.</div>
+      </div>
+      <button class="btn btn-secondary" type="button" style="font-size: var(--token-type-caption); padding: 0 var(--token-spacing-md); min-height: 36px;" onclick="showToast('Dokumentasi lengkap ada di docs/01-brand-foundations.md')">
+        <span>Panduan Brand</span>
+      </button>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: var(--token-spacing-xl);">
+      <!-- Card 1: Logo Hijau (Light Surface) -->
+      <div class="card">
+        <div style="background-color: var(--token-color-surface-subtle); border: 1px dashed var(--token-color-border); border-radius: var(--token-radius-md); padding: var(--token-spacing-2xl); display: flex; align-items: center; justify-content: center; min-height: 140px; margin-bottom: var(--token-spacing-md);">
+          <img src="../assets/brand/tembus-logo-green.webp" alt="Logo TEMBUS Hijau" style="max-height: 48px; width: auto; object-fit: contain;">
+        </div>
+        <h3 class="card-title">Logo Hijau (Light Surface)</h3>
+        <p class="card-subtitle">Digunakan pada latar putih atau netral terang: web customer, faktur, surat resmi, dan laporan korporat.</p>
+        <div style="display: flex; gap: var(--token-spacing-sm); align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-secondary" type="button" style="font-size: var(--token-type-caption); min-height: 36px; padding: 0 var(--token-spacing-md);" onclick="copyAssetPath('assets/brand/tembus-logo-green.webp')">
+            <span>Salin Path Aset</span>
+          </button>
+          <span style="font-size: var(--token-type-caption); color: var(--token-color-foreground-muted); font-family: var(--token-font-family-mono)">tembus-logo-green.webp</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Logo Putih Wordmark (Dark / Forest Surface) -->
+      <div class="card">
+        <div style="background-color: var(--token-palette-forest-950); border: 1px dashed var(--token-palette-forest-600); border-radius: var(--token-radius-md); padding: var(--token-spacing-2xl); display: flex; align-items: center; justify-content: center; min-height: 140px; margin-bottom: var(--token-spacing-md);">
+          <img src="../assets/brand/tembus-logo-white-wordmark.webp" alt="Logo TEMBUS Putih Wordmark" style="max-height: 48px; width: auto; object-fit: contain;">
+        </div>
+        <h3 class="card-title">Wordmark Putih (Dark & Forest Surface)</h3>
+        <p class="card-subtitle">Digunakan pada latar gelap atau forest green (`forest-950/900`): header aplikasi, dark mode, dan slide presentasi.</p>
+        <div style="display: flex; gap: var(--token-spacing-sm); align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-secondary" type="button" style="font-size: var(--token-type-caption); min-height: 36px; padding: 0 var(--token-spacing-md);" onclick="copyAssetPath('assets/brand/tembus-logo-white-wordmark.webp')">
+            <span>Salin Path Aset</span>
+          </button>
+          <span style="font-size: var(--token-type-caption); color: var(--token-color-foreground-muted); font-family: var(--token-font-family-mono)">tembus-logo-white-wordmark.webp</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Symbol Mark Berwarna (Compact Brand Mark) -->
+      <div class="card">
+        <div style="background-color: var(--token-color-surface-subtle); border: 1px dashed var(--token-color-border); border-radius: var(--token-radius-md); padding: var(--token-spacing-2xl); display: flex; align-items: center; justify-content: center; min-height: 140px; margin-bottom: var(--token-spacing-md);">
+          <img src="../assets/brand/tembus-mark-color.png" alt="TEMBUS Symbol Mark Color" style="max-height: 56px; width: auto; object-fit: contain;">
+        </div>
+        <h3 class="card-title">Symbol Mark Berwarna (App Icon & Compact)</h3>
+        <p class="card-subtitle">Digunakan untuk ikon aplikasi mobile, favicon browser, avatar layanan kurir, dan area terbatas.</p>
+        <div style="display: flex; gap: var(--token-spacing-sm); align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-secondary" type="button" style="font-size: var(--token-type-caption); min-height: 36px; padding: 0 var(--token-spacing-md);" onclick="copyAssetPath('assets/brand/tembus-mark-color.png')">
+            <span>Salin Path Aset</span>
+          </button>
+          <span style="font-size: var(--token-type-caption); color: var(--token-color-foreground-muted); font-family: var(--token-font-family-mono)">tembus-mark-color.png</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Symbol Mark Putih Compact (Dark Compact Area) -->
+      <div class="card">
+        <div style="background-color: var(--token-color-primary-dark); border: 1px dashed var(--token-color-primary-light); border-radius: var(--token-radius-md); padding: var(--token-spacing-2xl); display: flex; align-items: center; justify-content: center; min-height: 140px; margin-bottom: var(--token-spacing-md);">
+          <img src="../assets/brand/tembus-logo-white.png" alt="TEMBUS Symbol Mark Putih" style="max-height: 56px; width: auto; object-fit: contain;">
+        </div>
+        <h3 class="card-title">Symbol Mark Putih (Dark Compact Area)</h3>
+        <p class="card-subtitle">Digunakan pada status bar sempit, footer gelap, merchandise, atau bila wordmark penuh tidak muat.</p>
+        <div style="display: flex; gap: var(--token-spacing-sm); align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-secondary" type="button" style="font-size: var(--token-type-caption); min-height: 36px; padding: 0 var(--token-spacing-md);" onclick="copyAssetPath('assets/brand/tembus-logo-white.png')">
+            <span>Salin Path Aset</span>
+          </button>
+          <span style="font-size: var(--token-type-caption); color: var(--token-color-foreground-muted); font-family: var(--token-font-family-mono)">tembus-logo-white.png</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clear space & Brand Rules Alert Card -->
+    <div class="card" style="border-left: 4px solid var(--token-color-accent); background-color: var(--token-color-accent-pale);">
+      <h3 class="card-title" style="color: var(--token-color-accent-dark); display: flex; align-items: center; gap: var(--token-spacing-xs);">
+        <span>&#9888;</span> <span>Aturan Penggunaan & Clear Space Logo</span>
+      </h3>
+      <div style="font-size: var(--token-type-body-small); color: var(--token-color-foreground); line-height: 1.6;">
+        <div>1. <strong>Jangan Mengubah Warna:</strong> Dilarang merekolorisasi logo dengan warna lain di luar palet resmi.</div>
+        <div>2. <strong>Jangan Mendistorsi:</strong> Dilarang meregangkan (stretch), memutar (rotate), atau menambahkan efek bayangan berat (drop shadow).</div>
+        <div>3. <strong>Kontras Permukaan:</strong> Logo hijau dilarang diletakkan pada latar gelap; logo putih dilarang diletakkan langsung pada latar terang tanpa kontainer gelap yang memadai.</div>
+        <div>4. <strong>Clear Space:</strong> Berikan ruang kosong di sekeliling logo minimal setara dengan tinggi simbol logo "T".</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 1: Buttons -->
+  <section id="buttons">
+    <div class="section-header">
+      <div>
+        <h2>Tombol & Aksi</h2>
+        <div class="section-desc">Mendukung varian hierarki, micro-animation saat ditekan, dan pemenuhan touch-target 48px.</div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h3 class="card-title">Varian & State Interaktif</h3>
+      <p class="card-subtitle">Klik tombol untuk menguji feedback getaran skala, state loading, dan fokus keyboard.</p>
+      
+      <div class="btn-row" style="margin-bottom: var(--token-spacing-lg);">
+        <button class="btn btn-primary" type="button" onclick="showToast('Aksi Utama: Pesanan Diproses')">
+          <span>Pesan Sekarang</span>
+        </button>
+        <button class="btn btn-secondary" type="button" onclick="showToast('Aksi Sekunder: Membuka Detail')">
+          <span>Lihat Detail</span>
+        </button>
+        <button class="btn btn-accent" type="button" onclick="showToast('Aksi Aksen: Promo Diklaim')">
+          <span>Klaim Promo</span>
+        </button>
+        <button class="btn btn-tertiary" type="button" onclick="showToast('Aksi Tertier: Dilewati')">
+          <span>Lewati Langkah</span>
+        </button>
+        <button class="btn btn-destructive" type="button" onclick="openModal()">
+          <span>Batalkan Pesanan</span>
+        </button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" type="button" disabled>
+          <span>Tidak Tersedia</span>
+        </button>
+        <button class="btn btn-primary" type="button" aria-busy="true" id="btn-busy-demo">
+          <div class="spinner" aria-hidden="true"></div>
+          <span>Memproses…</span>
+        </button>
+        <button class="btn btn-secondary btn-icon" type="button" aria-label="Pengaturan" title="Pengaturan">
+          <span>&#9881;</span>
+        </button>
+        <button class="btn btn-secondary btn-icon" type="button" aria-label="Bantuan" title="Bantuan">
+          <span>&#63;</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Form & Inputs -->
+  <section id="inputs">
+    <div class="section-header">
+      <div>
+        <h2>Kolom Isian & Form</h2>
+        <div class="section-desc">Label eksplisit terikat programatik, boundary kontras 3:1, dan pesan validasi kontekstual.</div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <!-- Input Normal -->
+      <div class="card">
+        <div class="form-group">
+          <label for="resi-input">
+            <span>Nomor Resi</span>
+            <span style="font-weight: normal; color: var(--token-color-foreground-muted)">Wajib</span>
+          </label>
+          <input id="resi-input" class="input-control" placeholder="TMB-000123" value="TMB-000123">
+          <div class="helper-text">Format: TMB- dilanjutkan 6 digit angka.</div>
+        </div>
+      </div>
+
+      <!-- Input Error -->
+      <div class="card">
+        <div class="form-group">
+          <label for="phone-input">
+            <span>Nomor Telepon</span>
+            <span style="color: var(--token-color-error)">*</span>
+          </label>
+          <input id="phone-input" class="input-control" value="0812" aria-invalid="true" aria-describedby="phone-error">
+          <div class="helper-text err" id="phone-error">
+            <span>&#9888;</span> <span>Nomor telepon minimal 10 digit.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Disabled -->
+      <div class="card">
+        <div class="form-group">
+          <label for="city-input">Kota Pengiriman</label>
+          <input id="city-input" class="input-control" value="DKI Jakarta" disabled>
+          <div class="helper-text">Terkunci berdasarkan wilayah operasional aktif.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Status Chips -->
+  <section id="chips">
+    <div class="section-header">
+      <div>
+        <h2>Chip Status Operasional</h2>
+        <div class="section-desc">Tidak mengandalkan warna semata; selalu dilengkapi simbol dan label teks semantik.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="chip-row">
+        <span class="chip chip-success"><span>&#10003;</span> Selesai</span>
+        <span class="chip chip-info"><span>&#9679;</span> Dalam Perjalanan</span>
+        <span class="chip chip-warning"><span>&#9888;</span> Menunggu Pembayaran</span>
+        <span class="chip chip-error"><span>&#10005;</span> Dibatalkan</span>
+        <span class="chip chip-neutral"><span>&#9675;</span> Draft Pesanan</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Patterns (Order Card) -->
+  <section id="patterns">
+    <div class="section-header">
+      <div>
+        <h2>Pola Produk (Product Patterns)</h2>
+        <div class="section-desc">Arsitektur layout kartu pesanan kurir, merchant, dan pelanggan yang stabil.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Active Order Card -->
+      <div class="card order-tracking-card">
+        <div class="order-header">
+          <div>
+            <span class="order-code">TMB-992104</span>
+            <div style="font-size: var(--token-type-caption); color: var(--token-color-foreground-secondary)">Instant Courier &bull; Someday</div>
+          </div>
+          <span class="chip chip-info"><span>&#9679;</span> Dalam Pengantaran</span>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-step">
+            <div class="step-label">Toko Sumber Rejeki (Origin)</div>
+            <div class="step-detail">Jl. Gatot Subroto No. 12 &bull; Diambil 13:45</div>
+          </div>
+          <div class="timeline-step">
+            <div class="step-label">Penerima: Bapak Budi Santoso</div>
+            <div class="step-detail">Jl. Melati No. 8 &bull; Estimasi tiba 14:30</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: var(--token-spacing-md); align-items: center; margin-top: var(--token-spacing-lg);">
+          <button class="btn btn-primary" type="button" style="flex: 1" onclick="showToast('Membuka Peta Pelacakan Kurir')">
+            <span>Lacak Lokasi Kurir</span>
+          </button>
+          <button class="btn btn-secondary" type="button" onclick="showToast('Menghubungi Kurir via Telepon')">
+            <span>Hubungi</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Skeleton Loading State Pattern -->
+      <div class="card">
+        <div class="order-header">
+          <div class="skeleton-box" style="width: 140px; height: 24px;"></div>
+          <div class="skeleton-box" style="width: 90px; height: 24px; border-radius: var(--token-radius-pill);"></div>
+        </div>
+        <div style="margin: var(--token-spacing-lg) 0; display: flex; flex-direction: column; gap: var(--token-spacing-md);">
+          <div class="skeleton-box" style="width: 80%; height: 16px;"></div>
+          <div class="skeleton-box" style="width: 60%; height: 14px;"></div>
+          <div class="skeleton-box" style="width: 90%; height: 14px;"></div>
+        </div>
+        <div class="skeleton-box" style="width: 100%; height: var(--token-size-min-touch-target); border-radius: var(--token-radius-md);"></div>
+        <div class="helper-text" style="margin-top: var(--token-spacing-md);">
+          Pola Skeleton Loader (tanpa layout shift, mempertahankan hierarki visual saat data ditarik).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Overlays & Z-Index Tokens -->
+  <section id="overlays">
+    <div class="section-header">
+      <div>
+        <h2>Lapisan Overlays & Z-Index Token</h2>
+        <div class="section-desc">Menjamin penumpukan modal, drawer, dropdown, dan toast terprediksi tanpa konflik angka acak.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Pengujian Layering Z-Index</h3>
+      <p class="card-subtitle">Uji modal interaktif (z-index: 1050) dan sistem toast notifikasi (z-index: 1080).</p>
+      
+      <div class="btn-row">
+        <button class="btn btn-secondary" type="button" onclick="openModal()">
+          <span>Buka Modal Konfirmasi</span>
+        </button>
+        <button class="btn btn-primary" type="button" onclick="showToast('Notifikasi sistem: Z-Index 1080 aktif!')">
+          <span>Munculkan Toast Notifikasi</span>
+        </button>
+      </div>
+
+      <div style="margin-top: var(--token-spacing-xl); padding: var(--token-spacing-md); background: var(--token-color-surface-subtle); border-radius: var(--token-radius-md); font-family: var(--token-font-family-mono); font-size: var(--token-type-caption);">
+        Stacking Scale: base(0) &bull; dropdown(1000) &bull; sticky(1020) &bull; overlay(1040) &bull; modal(1050) &bull; toast(1080)
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Data Visualization -->
+  <section id="dataviz">
+    <div class="section-header">
+      <div>
+        <h2>Warna Seri Data Visualization</h2>
+        <div class="section-desc">6 warna kategorikal terproteksi rasio kontras 3:1 terhadap permukaan kartu dan latar.</div>
+      </div>
+    </div>
+
+    <div class="dataviz-grid" id="dataviz-container">
+      <!-- Generated via JS -->
+    </div>
+  </section>
+
+  <!-- Section 7: Corporate Presentation & Deck Template -->
+  <section id="deck-template">
+    <div class="section-header">
+      <div>
+        <h2>Template Presentasi &amp; Deck (16:9)</h2>
+        <div class="section-desc">Standar visual korporat resmi untuk rapat direksi, tinjauan bisnis, investor deck, dan laporan operasional.</div>
+      </div>
+      <button class="btn btn-secondary" type="button" style="font-size: var(--token-type-caption); padding: 0 var(--token-spacing-md); min-height: 36px;" onclick="copyTemplateTheme()">
+        <span>Salin presentation-theme.json</span>
+      </button>
+    </div>
+
+    <!-- Controls & Switcher -->
+    <div class="deck-controls">
+      <div class="slide-tabs" role="tablist" aria-label="Pilih jenis slide">
+        <button class="slide-tab active" id="slide-tab-1" type="button" role="tab" aria-selected="true" aria-controls="slide-1" tabindex="0" onclick="switchSlide(1)">1. Slide Sampul (Cover Dark)</button>
+        <button class="slide-tab" id="slide-tab-2" type="button" role="tab" aria-selected="false" aria-controls="slide-2" tabindex="-1" onclick="switchSlide(2)">2. Ringkasan Eksekutif (KPIs)</button>
+        <button class="slide-tab" id="slide-tab-3" type="button" role="tab" aria-selected="false" aria-controls="slide-3" tabindex="-1" onclick="switchSlide(3)">3. Bukti Data (Chart)</button>
+        <button class="slide-tab" id="slide-tab-4" type="button" role="tab" aria-selected="false" aria-controls="slide-4" tabindex="-1" onclick="switchSlide(4)">4. Rencana Aksi (Closing)</button>
+      </div>
+      <div style="font-size: var(--token-type-caption); color: var(--token-color-foreground-muted); font-family: var(--token-font-family-mono);">
+        Aspect Ratio: 16:9 (Widescreen) &bull; Safe Area: 7%
+      </div>
+    </div>
+
+    <!-- Slide 16:9 Viewport -->
+    <div class="slide-frame" id="slide-viewport">
+      <!-- Slide 1: Cover (Dark Forest-950) -->
+      <div class="slide-content slide-cover-bg active" id="slide-1" role="tabpanel" aria-labelledby="slide-tab-1" aria-hidden="false" tabindex="0">
+        <div class="slide-cover-accent-bar"></div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <img src="../assets/brand/tembus-logo-white-wordmark.webp" alt="TEMBUS" height="38" style="object-fit: contain;">
+          <span style="display: inline-block; padding: 4px 12px; border-radius: var(--token-radius-pill); font-size: 0.75rem; font-weight: var(--token-font-weight-bold); background-color: var(--token-palette-orange-bright); color: var(--token-color-on-accent-light);">
+            LAPORAN MANAJEMEN EKSEKUTIF
+          </span>
+        </div>
+        <div style="margin: auto 0;">
+          <h1 style="font-size: clamp(1.8rem, 3.8vw, 2.75rem); line-height: 1.15; font-weight: 700; margin: 0 0 var(--token-spacing-md); letter-spacing: -0.025em; color: var(--token-color-on-primary-dark);">
+            Tinjauan Kinerja Operasional &amp; Ekspansi Q3
+          </h1>
+          <p style="font-size: clamp(0.95rem, 1.6vw, 1.25rem); color: color-mix(in srgb, var(--token-color-on-primary-dark) 82%, transparent); margin: 0; max-width: 720px; line-height: 1.5;">
+            Strategi optimasi rute kurir, peningkatan SLA on-time delivery, dan percepatan integrasi logistik antar-hub.
+          </p>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid color-mix(in srgb, var(--token-color-on-primary-dark) 15%, transparent); padding-top: var(--token-spacing-md); font-size: var(--token-type-caption); color: color-mix(in srgb, var(--token-color-on-primary-dark) 68%, transparent);">
+          <div>Divisi Operasional &amp; Teknologi &bull; PT Tembus Lintas Teknologi</div>
+          <div>Kuartal III 2026 &bull; Rahasia / Terbatas</div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Executive Summary (Light Surface + KPI) -->
+      <div class="slide-content slide-light-bg" id="slide-2" role="tabpanel" aria-labelledby="slide-tab-2" aria-hidden="true" tabindex="0">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--token-color-primary); padding-bottom: var(--token-spacing-sm);">
+          <div>
+            <span style="font-size: var(--token-type-caption); font-weight: var(--token-font-weight-bold); color: var(--token-color-primary); text-transform: uppercase; letter-spacing: 0.05em;">Ringkasan Eksekutif</span>
+            <h2 style="font-size: clamp(1.2rem, 2.2vw, 1.75rem); margin: 2px 0 0; color: var(--token-color-foreground);">Tiga Indikator Utama Kinerja Pengiriman</h2>
+          </div>
+          <span style="font-size: var(--token-type-caption); color: var(--token-color-foreground-muted);">Slide 02 / 12</span>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div>
+              <div style="font-size: var(--token-type-caption); color: var(--token-color-foreground-secondary); font-weight: 600;">WAKTU TEMPUH RATA-RATA</div>
+              <div class="kpi-num" style="color: var(--token-color-primary);">34.8 Min</div>
+              <p style="font-size: var(--token-type-caption); color: var(--token-color-success); margin: 0; font-weight: 600;">&darr; 14.2% lebih cepat dibanding Q2</p>
+            </div>
+            <div style="font-size: 0.6875rem; color: var(--token-color-foreground-muted); margin-top: var(--token-spacing-sm);">Rute radius 15km dalam kota</div>
+          </div>
+
+          <div class="kpi-card">
+            <div>
+              <div style="font-size: var(--token-type-caption); color: var(--token-color-foreground-secondary); font-weight: 600;">SLA TEPAT WAKTU (ON-TIME)</div>
+              <div class="kpi-num" style="color: var(--token-color-primary);">99.82%</div>
+              <p style="font-size: var(--token-type-caption); color: var(--token-color-success); margin: 0; font-weight: 600;">Melampaui target SLA (99.50%)</p>
+            </div>
+            <div style="font-size: 0.6875rem; color: var(--token-color-foreground-muted); margin-top: var(--token-spacing-sm);">Total 1.428.000 paket sukses</div>
+          </div>
+
+          <div class="kpi-card highlight">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: var(--token-type-caption); color: var(--token-color-accent-dark); font-weight: 700;">KEPUTUSAN EKSEKUTIF</span>
+                <span style="background: var(--token-color-accent); color: var(--token-color-on-accent); font-size: 0.625rem; font-weight: bold; padding: 1px 6px; border-radius: 4px;">PENTING</span>
+              </div>
+              <div class="kpi-num" style="color: var(--token-color-accent);">+42.6%</div>
+              <p style="font-size: var(--token-type-caption); color: var(--token-color-accent-dark); margin: 0; font-weight: 600;">Lonjakan Volume Koridor Barat</p>
+            </div>
+            <div style="font-size: 0.6875rem; color: var(--token-color-foreground); font-weight: 600; margin-top: var(--token-spacing-sm); border-top: 1px solid color-mix(in srgb, var(--token-color-accent) 20%, transparent); padding-top: 4px;">
+              Keputusan: Alokasi 120 armada kurir baru per 15 November
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--token-color-foreground-muted); border-top: 1px solid var(--token-color-border); padding-top: var(--token-spacing-xs);">
+          <span>Sumber: TEMBUS Analytics Data Platform &bull; Validasi Audit Operasional</span>
+          <span>Sesuai Dokumen Template Korporat TEMBUS 16:9</span>
+        </div>
+      </div>
+
+      <!-- Slide 3: Data Evidence (Categorical Dataviz Chart) -->
+      <div class="slide-content slide-light-bg" id="slide-3" role="tabpanel" aria-labelledby="slide-tab-3" aria-hidden="true" tabindex="0">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--token-color-primary); padding-bottom: var(--token-spacing-sm);">
+          <div>
+            <span style="font-size: var(--token-type-caption); font-weight: var(--token-font-weight-bold); color: var(--token-color-primary); text-transform: uppercase; letter-spacing: 0.05em;">Bukti Data &amp; Grafik</span>
+            <h2 style="font-size: clamp(1.2rem, 2.2vw, 1.75rem); margin: 2px 0 0; color: var(--token-color-foreground);">Sebaran Moda Pengiriman &amp; Volume Layanan</h2>
+          </div>
+          <span style="font-size: var(--token-type-caption); color: var(--token-color-foreground-muted);">Slide 03 / 12</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--token-spacing-xl); margin: auto 0; align-items: center;">
+          <div class="slide-bar-group">
+            <div class="slide-bar-row">
+              <span class="slide-bar-label">Instant Express (dataviz-1)</span>
+              <div class="slide-bar-track">
+                <div class="slide-bar-fill" style="width: 78%; background-color: var(--token-color-dataviz-1);">78% &bull; 624k</div>
+              </div>
+            </div>
+            <div class="slide-bar-row">
+              <span class="slide-bar-label">Same Day Delivery (dataviz-2)</span>
+              <div class="slide-bar-track">
+                <div class="slide-bar-fill" style="width: 54%; background-color: var(--token-color-dataviz-2);">54% &bull; 432k</div>
+              </div>
+            </div>
+            <div class="slide-bar-row">
+              <span class="slide-bar-label">Next Day Inter-city (dataviz-3)</span>
+              <div class="slide-bar-track">
+                <div class="slide-bar-fill" style="width: 38%; background-color: var(--token-color-dataviz-3);">38% &bull; 304k</div>
+              </div>
+            </div>
+            <div class="slide-bar-row">
+              <span class="slide-bar-label">Kargo Berat (dataviz-4)</span>
+              <div class="slide-bar-track">
+                <div class="slide-bar-fill" style="width: 24%; background-color: var(--token-color-dataviz-4);">24% &bull; 192k</div>
+              </div>
+            </div>
+            <div class="slide-bar-row">
+              <span class="slide-bar-label">Layanan Dingin (dataviz-5)</span>
+              <div class="slide-bar-track">
+                <div class="slide-bar-fill" style="width: 12%; background-color: var(--token-color-dataviz-5);">12% &bull; 96k</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: var(--token-color-surface); border: 1px solid var(--token-color-border); border-radius: var(--token-radius-md); padding: var(--token-spacing-md);">
+            <div style="font-size: var(--token-type-label); font-weight: var(--token-font-weight-bold); color: var(--token-color-primary); margin-bottom: var(--token-spacing-xs);">
+              Temuan Kunci:
+            </div>
+            <p style="font-size: var(--token-type-caption); color: var(--token-color-foreground-secondary); margin: 0 0 var(--token-spacing-sm); line-height: 1.5;">
+              Moda <strong>Instant Express</strong> berkontribusi sebesar 43% dari total pendapatan logistik, tumbuh konsisten didorong sektor F&amp;B dan obat-obatan darurat.
+            </p>
+            <div style="font-size: 0.6875rem; background: var(--token-color-surface-subtle); padding: 6px; border-radius: 4px; color: var(--token-color-foreground-muted);">
+              Aturan: Warna seri grafik selalu disertai label langsung dan penanda teks angka.
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--token-color-foreground-muted); border-top: 1px solid var(--token-color-border); padding-top: var(--token-spacing-xs);">
+          <span>Sumber: Log-Engine Antar-Hub Q3 &bull; Metrik Terverifikasi</span>
+          <span>Kepatuhan Aksesibilitas Dataviz Kontras &ge; 3.0:1</span>
+        </div>
+      </div>
+
+      <!-- Slide 4: Closing & Action Plan -->
+      <div class="slide-content slide-cover-bg" id="slide-4" role="tabpanel" aria-labelledby="slide-tab-4" aria-hidden="true" tabindex="0">
+        <div class="slide-cover-accent-bar"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="font-size: clamp(1.2rem, 2.2vw, 1.75rem); margin: 0; color: var(--token-color-on-primary-dark);">Langkah Selanjutnya &amp; Garis Waktu Eksekusi</h2>
+          <img src="../assets/brand/tembus-logo-white-wordmark.webp" alt="TEMBUS" height="28" style="object-fit: contain;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--token-spacing-md); margin: auto 0;">
+          <div style="background: color-mix(in srgb, var(--token-color-on-primary-dark) 8%, transparent); border: 1px solid color-mix(in srgb, var(--token-color-on-primary-dark) 15%, transparent); border-radius: var(--token-radius-md); padding: var(--token-spacing-md);">
+            <div style="font-size: 0.75rem; color: var(--token-palette-orange-bright); font-weight: bold; margin-bottom: 4px;">FASE 1 &bull; 15 NOV 2026</div>
+            <div style="font-weight: 600; font-size: var(--token-type-body-small); margin-bottom: 6px; color: var(--token-color-on-primary-dark);">Penambahan 120 Armada</div>
+            <div style="font-size: var(--token-type-caption); color: color-mix(in srgb, var(--token-color-on-primary-dark) 82%, transparent);">Fokus aktivasi hub koridor barat Jakarta-Tangerang. Penanggung jawab: Tim Ops Hub.</div>
+          </div>
+
+          <div style="background: color-mix(in srgb, var(--token-color-on-primary-dark) 8%, transparent); border: 1px solid color-mix(in srgb, var(--token-color-on-primary-dark) 15%, transparent); border-radius: var(--token-radius-md); padding: var(--token-spacing-md);">
+            <div style="font-size: 0.75rem; color: var(--token-palette-orange-bright); font-weight: bold; margin-bottom: 4px;">FASE 2 &bull; 30 NOV 2026</div>
+            <div style="font-weight: 600; font-size: var(--token-type-body-small); margin-bottom: 6px; color: var(--token-color-on-primary-dark);">Peluncuran Dynamic Rerouting</div>
+            <div style="font-size: var(--token-type-caption); color: color-mix(in srgb, var(--token-color-on-primary-dark) 82%, transparent);">Deployment algoritma dispatching otomatis di app kurir. Penanggung jawab: Tim Engineering.</div>
+          </div>
+
+          <div style="background: color-mix(in srgb, var(--token-color-on-primary-dark) 8%, transparent); border: 1px solid color-mix(in srgb, var(--token-color-on-primary-dark) 15%, transparent); border-radius: var(--token-radius-md); padding: var(--token-spacing-md);">
+            <div style="font-size: 0.75rem; color: var(--token-palette-orange-bright); font-weight: bold; margin-bottom: 4px;">FASE 3 &bull; 15 DES 2026</div>
+            <div style="font-weight: 600; font-size: var(--token-type-body-small); margin-bottom: 6px; color: var(--token-color-on-primary-dark);">Review SLA Akhir Tahun</div>
+            <div style="font-size: var(--token-type-caption); color: color-mix(in srgb, var(--token-color-on-primary-dark) 82%, transparent);">Laporan evaluasi kesiapan lonjakan Harbolnas. Penanggung jawab: Direksi Operasional.</div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid color-mix(in srgb, var(--token-color-on-primary-dark) 15%, transparent); padding-top: var(--token-spacing-md); font-size: var(--token-type-caption); color: color-mix(in srgb, var(--token-color-on-primary-dark) 68%, transparent);">
+          <div>Komitmen Layanan: <strong>Lebih Dekat, Lebih Cepat</strong></div>
+          <div>Dokumen Resmi Template Deck Korporat TEMBUS v0.2.1</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Corporate Deck Governance Rules Card -->
+    <div class="card" style="margin-top: var(--token-spacing-xl); border-left: 4px solid var(--token-color-primary);">
+      <h3 class="card-title" style="display: flex; align-items: center; gap: var(--token-spacing-xs);">
+        <span>&#128203;</span> <span>Prinsip Standar Presentasi Korporat TEMBUS</span>
+      </h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--token-spacing-md); margin-top: var(--token-spacing-md); font-size: var(--token-type-body-small);">
+        <div>
+          <strong>1. Satu Pesan per Slide:</strong> Hindari penumpukan ide majemuk. Judul slide harus menyatakan kesimpulan fakta atau keputusan.
+        </div>
+        <div>
+          <strong>2. Oranye untuk Keputusan:</strong> Warna aksen oranye (`#FF6A00` / `#C2410C`) hanya dipakai untuk 1 metrik atau keputusan penting, bukan dekorasi.
+        </div>
+        <div>
+          <strong>3. Safe Margin 7%:</strong> Jaga jarak aman minimal 7% di sekeliling canvas 16:9 agar teks tidak terpotong bezel monitor atau proyektor.
+        </div>
+        <div>
+          <strong>4. Tipografi Resmi:</strong> Wajib memakai Aptos Display untuk judul dan Aptos untuk body copy (Fallback: Arial). Ukuran presentasi langsung minimal 18pt.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       FEATURE 1: SVG Iconography Gallery (assets/icons/)
+  ══════════════════════════════════════════════════════════ -->
+  <section id="icons-gallery">
+    <div class="section-header">
+      <div>
+        <h2>Sistem Ikonografi SVG</h2>
+        <div class="section-desc">20 ikon logistik siap pakai dalam format stroke 24×24. Klik ikon untuk melihat snippet per platform.</div>
+      </div>
+      <button class="btn btn-secondary" type="button" style="font-size:var(--token-type-caption);padding:0 var(--token-spacing-md);min-height:36px;" onclick="copyAllIconNames()">
+        <span>Salin Semua Nama</span>
+      </button>
+    </div>
+
+    <div class="card">
+      <!-- Search + Controls -->
+      <div class="icon-search-bar">
+        <input id="icon-search" class="icon-search-input" type="search" placeholder="Cari ikon… (misal: truck, map, clock)" oninput="filterIcons(this.value)" aria-label="Cari ikon">
+        <div style="display:flex;gap:6px;align-items:center;">
+          <span style="font-size:var(--token-type-caption);color:var(--token-color-foreground-muted);white-space:nowrap;">Ukuran:</span>
+          <button class="icon-size-btn active" type="button" aria-pressed="true" onclick="setIconSize(16,this)">16</button>
+          <button class="icon-size-btn" type="button" aria-pressed="false" onclick="setIconSize(24,this)">24</button>
+          <button class="icon-size-btn" type="button" aria-pressed="false" onclick="setIconSize(32,this)">32</button>
+          <button class="icon-size-btn" type="button" aria-pressed="false" onclick="setIconSize(48,this)">48</button>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <span style="font-size:var(--token-type-caption);color:var(--token-color-foreground-muted);">Warna:</span>
+          <button class="icon-color-btn active" type="button" aria-label="Warna primary" aria-pressed="true" style="background:var(--token-color-primary);" onclick="setIconColor('var(--token-color-primary)',this)" title="Primary"></button>
+          <button class="icon-color-btn" type="button" aria-label="Warna aksen" aria-pressed="false" style="background:var(--token-color-accent);" onclick="setIconColor('var(--token-color-accent)',this)" title="Accent"></button>
+          <button class="icon-color-btn" type="button" aria-label="Warna foreground" aria-pressed="false" style="background:var(--token-color-foreground);" onclick="setIconColor('var(--token-color-foreground)',this)" title="Foreground"></button>
+          <button class="icon-color-btn" type="button" aria-label="Warna info" aria-pressed="false" style="background:var(--token-color-info);" onclick="setIconColor('var(--token-color-info)',this)" title="Info"></button>
+        </div>
+      </div>
+
+      <!-- Icon Grid -->
+      <div class="icons-grid-main" id="icons-grid-main"></div>
+      <div id="icon-empty" style="display:none;padding:var(--token-spacing-xl);text-align:center;color:var(--token-color-foreground-muted);font-size:var(--token-type-body-small);">Tidak ada ikon yang cocok.</div>
+
+      <!-- Detail Panel (slides open on click) -->
+      <div class="icon-detail-panel" id="icon-detail-panel">
+        <div class="icon-detail-header">
+          <div class="icon-preview-box" id="icon-preview-box"></div>
+          <div>
+            <div style="font-weight:700;font-size:1.0625rem;margin-bottom:4px;" id="icon-detail-name">—</div>
+            <div style="font-size:var(--token-type-caption);color:var(--token-color-foreground-muted);font-family:var(--token-font-family-mono);" id="icon-detail-path">assets/icons/—.svg</div>
+            <div style="margin-top:var(--token-spacing-sm);display:flex;gap:var(--token-spacing-sm);flex-wrap:wrap;">
+              <button class="btn btn-secondary" type="button" style="min-height:32px;padding:0 var(--token-spacing-md);font-size:var(--token-type-caption);" onclick="copySvgRaw()" id="btn-copy-svg">Salin SVG</button>
+              <button class="btn btn-primary" type="button" style="min-height:32px;padding:0 var(--token-spacing-md);font-size:var(--token-type-caption);" onclick="copyIconSnippet('react')" >Salin React</button>
+              <button class="btn btn-secondary" type="button" style="min-height:32px;padding:0 var(--token-spacing-md);font-size:var(--token-type-caption);" onclick="copyIconSnippet('compose')">Salin Compose</button>
+              <button class="btn btn-secondary" type="button" style="min-height:32px;padding:0 var(--token-spacing-md);font-size:var(--token-type-caption);" onclick="copyIconSnippet('swift')">Salin SwiftUI</button>
+            </div>
+          </div>
+        </div>
+        <!-- Code viewer inside detail -->
+        <div class="code-viewer" style="margin-top:0;border-radius:0;border:none;">
+          <div class="code-header">
+            <div class="code-tabs" id="icon-code-tabs" role="tablist" aria-label="Format kode ikon">
+              <button class="code-tab active" type="button" role="tab" aria-selected="true" aria-controls="icon-code-output" onclick="switchIconTab('svg',this)">SVG Raw</button>
+              <button class="code-tab" type="button" role="tab" aria-selected="false" aria-controls="icon-code-output" onclick="switchIconTab('react',this)">React / JSX</button>
+              <button class="code-tab" type="button" role="tab" aria-selected="false" aria-controls="icon-code-output" onclick="switchIconTab('html',this)">HTML img</button>
+              <button class="code-tab" type="button" role="tab" aria-selected="false" aria-controls="icon-code-output" onclick="switchIconTab('compose',this)">Compose</button>
+              <button class="code-tab" type="button" role="tab" aria-selected="false" aria-controls="icon-code-output" onclick="switchIconTab('swift',this)">SwiftUI</button>
+            </div>
+            <button class="copy-btn" type="button" onclick="copyCurrent('icon-code-output')">Salin Kode</button>
+          </div>
+          <pre class="code-pre" id="icon-code-output" role="tabpanel" aria-live="polite" tabindex="0"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       FEATURE 2: Multi-Framework Code Snippet Generator
+  ══════════════════════════════════════════════════════════ -->
+  <section id="snippet-generator">
+    <div class="section-header">
+      <div>
+        <h2>Code Snippet Generator</h2>
+        <div class="section-desc">Pilih komponen → pilih platform → salin kode siap pakai ke proyek Anda.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <!-- Component Selector -->
+      <div style="margin-bottom:var(--token-spacing-sm);font-size:var(--token-type-label);font-weight:600;color:var(--token-color-foreground-secondary);">Pilih Komponen:</div>
+      <div class="snippet-selector" id="snippet-selector">
+        <button class="snippet-comp-btn active" type="button" aria-pressed="true" onclick="selectSnippetComp('btn-primary',this)">Tombol Primer</button>
+        <button class="snippet-comp-btn" type="button" aria-pressed="false" onclick="selectSnippetComp('btn-secondary',this)">Tombol Sekunder</button>
+        <button class="snippet-comp-btn" type="button" aria-pressed="false" onclick="selectSnippetComp('btn-accent',this)">Tombol Aksen</button>
+        <button class="snippet-comp-btn" type="button" aria-pressed="false" onclick="selectSnippetComp('btn-destructive',this)">Tombol Destruktif</button>
+        <button class="snippet-comp-btn" type="button" aria-pressed="false" onclick="selectSnippetComp('chip-success',this)">Chip Sukses</button>
+        <button class="snippet-comp-btn" type="button" aria-pressed="false" onclick="selectSnippetComp('chip-warning',this)">Chip Peringatan</button>
+        <button class="snippet-comp-btn" type="button" aria-pressed="false" onclick="selectSnippetComp('chip-error',this)">Chip Error</button>
+        <button class="snippet-comp-btn" type="button" aria-pressed="false" onclick="selectSnippetComp('chip-info',this)">Chip Info</button>
+        <button class="snippet-comp-btn" type="button" aria-pressed="false" onclick="selectSnippetComp('input-normal',this)">Input Normal</button>
+        <button class="snippet-comp-btn" type="button" aria-pressed="false" onclick="selectSnippetComp('input-error',this)">Input Error</button>
+        <button class="snippet-comp-btn" type="button" aria-pressed="false" onclick="selectSnippetComp('order-card',this)">Kartu Order</button>
+      </div>
+
+      <!-- Live Preview -->
+      <div style="font-size:var(--token-type-label);font-weight:600;color:var(--token-color-foreground-secondary);margin-bottom:var(--token-spacing-sm);">Preview Langsung:</div>
+      <div class="snippet-preview-area" id="snippet-preview-area"></div>
+
+      <!-- Code Output -->
+      <div class="code-viewer" style="margin-top:0;">
+        <div class="code-header">
+          <div class="code-tabs" id="snippet-code-tabs" role="tablist" aria-label="Platform snippet">
+            <button class="code-tab active" type="button" role="tab" aria-selected="true" aria-controls="snippet-output" onclick="switchSnippetTab('html',this)">HTML</button>
+            <button class="code-tab" type="button" role="tab" aria-selected="false" aria-controls="snippet-output" onclick="switchSnippetTab('react',this)">React</button>
+            <button class="code-tab" type="button" role="tab" aria-selected="false" aria-controls="snippet-output" onclick="switchSnippetTab('compose',this)">Compose</button>
+            <button class="code-tab" type="button" role="tab" aria-selected="false" aria-controls="snippet-output" onclick="switchSnippetTab('swift',this)">SwiftUI</button>
+          </div>
+          <button class="copy-btn" type="button" onclick="copyCurrent('snippet-output')">Salin Kode</button>
+        </div>
+        <pre class="code-pre" id="snippet-output" role="tabpanel" aria-live="polite" tabindex="0" style="max-height:320px;overflow-y:auto;"></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       FEATURE 3: Tailwind CSS Preset Generator
+  ══════════════════════════════════════════════════════════ -->
+  <section id="tailwind-preset">
+    <div class="section-header">
+      <div>
+        <h2>Tailwind CSS Preset Generator</h2>
+        <div class="section-desc">Preset otomatis dari token TEMBUS — siap dipasang di <code>tailwind.config.js</code> tanpa mapping manual.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Token preview swatches -->
+      <div class="card">
+        <h3 class="card-title">Token yang Di-map ke Tailwind</h3>
+        <p class="card-subtitle">Setiap token warna menjadi kelas Tailwind: <code>text-primary</code>, <code>bg-success-surface</code>, dst.</p>
+        <div class="tailwind-meta-row">
+          <span class="tailwind-badge">Colors ✓</span>
+          <span class="tailwind-badge">Spacing ✓</span>
+          <span class="tailwind-badge">Border Radius ✓</span>
+          <span class="tailwind-badge">Z-Index ✓</span>
+          <span class="tailwind-badge">Screens ✓</span>
+        </div>
+        <div class="tw-swatch-grid" id="tw-swatch-grid"></div>
+        <p style="font-size:var(--token-type-caption);color:var(--token-color-foreground-muted);margin:0;">Klik swatch untuk menyalin class Tailwind.</p>
+      </div>
+
+      <!-- Preset code viewer -->
+      <div class="card" style="padding:0;">
+        <div class="code-viewer" style="margin-top:0;border:none;border-radius:var(--token-radius-lg);height:100%;display:flex;flex-direction:column;">
+          <div class="code-header" style="border-radius:var(--token-radius-lg) var(--token-radius-lg) 0 0;">
+            <div class="code-tabs" id="tw-code-tabs" role="tablist" aria-label="Tailwind preset">
+              <button class="code-tab active" type="button" role="tab" aria-selected="true" aria-controls="tw-code-output" onclick="switchTwTab('preset',this)">tembus.tailwind.cjs</button>
+              <button class="code-tab" type="button" role="tab" aria-selected="false" aria-controls="tw-code-output" onclick="switchTwTab('usage',this)">Cara Pakai</button>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="copy-btn" type="button" onclick="copyCurrent('tw-code-output')">Salin</button>
+              <button class="copy-btn" type="button" onclick="downloadTailwindPreset()" style="background:color-mix(in srgb, var(--token-color-success) 15%, transparent);border-color:color-mix(in srgb, var(--token-color-success) 30%, transparent);">Unduh</button>
+            </div>
+          </div>
+          <pre class="code-pre" id="tw-code-output" role="tabpanel" aria-live="polite" tabindex="0" style="flex:1;max-height:420px;overflow-y:auto;"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
+
+<!-- Modal Overlay Demo (Z-Index Modal) -->
+<div class="modal-backdrop" id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+  <div class="modal-dialog">
+    <h3 id="modal-heading" style="margin: 0 0 var(--token-spacing-sm); font-size: 1.25rem;">Konfirmasi Pembatalan</h3>
+    <p style="color: var(--token-color-foreground-secondary); margin: 0 0 var(--token-spacing-xl);">
+      Apakah Anda yakin ingin membatalkan pesanan <strong>TMB-992104</strong>? Aksi ini akan mengembalikan alokasi kurir.
+    </p>
+    <div style="display: flex; justify-content: flex-end; gap: var(--token-spacing-md);">
+      <button class="btn btn-secondary" type="button" onclick="closeModal()">Kembali</button>
+      <button class="btn btn-destructive" type="button" onclick="confirmCancel()">Batalkan Sekarang</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container (Z-Index Toast) -->
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+<script src="icon-fallback.js"></script>
 <script>
-var viz=document.getElementById('viz');
-for(var i=1;i<=6;i++){var d=document.createElement('div');d.className='swatch';d.innerHTML='<i style="background:var(--token-color-dataviz-'+i+')"></i><span>dataviz-'+i+'</span>';viz.appendChild(d);}
-var btn=document.getElementById('theme');
-btn.addEventListener('click',function(){var h=document.documentElement;var dark=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',dark?'light':'dark');btn.textContent=dark?'Ganti ke mode gelap':'Ganti ke mode terang';});
+// ═══════════════════════════════════════════════════════
+// FEATURE 1: SVG Icon Gallery
+// ═══════════════════════════════════════════════════════
+const ICONS = [
+  'alert-triangle','arrow-right','box-open','check-circle','clock',
+  'courier','delivery-point','hub','list','map-pin',
+  'package','payment','phone','search','settings',
+  'shield-check','store','tracking','truck','x-circle'
+];
+
+const ICON_LABELS = {
+  'alert-triangle':'Peringatan','arrow-right':'Panah Kanan','box-open':'Kotak Terbuka',
+  'check-circle':'Cek Lingkaran','clock':'Jam','courier':'Kurir','delivery-point':'Titik Pengiriman',
+  'hub':'Hub Logistik','list':'Daftar','map-pin':'Pin Peta','package':'Paket',
+  'payment':'Pembayaran','phone':'Telepon','search':'Cari','settings':'Pengaturan',
+  'shield-check':'Keamanan','store':'Toko','tracking':'Pelacakan','truck':'Truk','x-circle':'Batal'
+};
+
+let currentIconName = null;
+let currentIconSvg = '';
+let currentIconColor = 'var(--token-color-primary)';
+let currentIconSize = 16;
+let currentIconTab = 'svg';
+
+// Generated from assets/icons/*.svg by scripts/build-icons.mjs.
+const ICON_SVG_FALLBACK = window.TEMBUS_ICON_SVGS || {};
+
+
+const iconCache = {};
+
+// Clipboard helper with a fallback for local file:// previews.
+async function copyText(value) {
+  const text = String(value ?? '');
+  if (!text) return false;
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (_) {
+    // Continue with the document.execCommand fallback below.
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } catch (_) {
+    copied = false;
+  }
+  textarea.remove();
+  return copied;
+}
+
+async function loadSvg(name) {
+  if (iconCache[name]) return iconCache[name];
+  try {
+    const r = await fetch(`../assets/icons/${name}.svg`);
+    if (!r.ok) throw new Error(`Icon request failed: ${r.status}`);
+    const txt = await r.text();
+    if (txt.includes('<svg')) {
+      iconCache[name] = txt;
+      return txt;
+    }
+  } catch (_) {
+    // file:// pages may block fetch(); use the bundled gallery fallback.
+  }
+
+  const fallback = ICON_SVG_FALLBACK[name] || '';
+  iconCache[name] = fallback;
+  return fallback;
+}
+
+function buildIconGrid(filter = '') {
+  const grid = document.getElementById('icons-grid-main');
+  const empty = document.getElementById('icon-empty');
+  const filtered = ICONS.filter(n => n.includes(filter.toLowerCase()) || (ICON_LABELS[n]||'').toLowerCase().includes(filter.toLowerCase()));
+
+  grid.innerHTML = '';
+  empty.style.display = filtered.length === 0 ? 'block' : 'none';
+
+  filtered.forEach(name => {
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'icon-card-main';
+    card.id = `icard-${name}`;
+    card.setAttribute('aria-label', `Pilih ikon ${ICON_LABELS[name] || name}`);
+    card.innerHTML = `
+      <span style="width:${currentIconSize}px;height:${currentIconSize}px;display:flex;align-items:center;justify-content:center;color:${currentIconColor};transition:all 0.15s;" id="icon-svg-${name}"></span>
+      <span class="icon-name">${name}</span>
+    `;
+    card.addEventListener('click', () => selectIcon(name));
+    grid.appendChild(card);
+
+    // lazy load SVG
+    loadSvg(name).then(svg => {
+      const el = document.getElementById(`icon-svg-${name}`);
+      if (!el) return;
+      el.innerHTML = svg.replace(/<svg /, `<svg width="${currentIconSize}" height="${currentIconSize}" `);
+      const s = el.querySelector('svg');
+      if (s) { s.style.color = currentIconColor; s.style.width = currentIconSize + 'px'; s.style.height = currentIconSize + 'px'; }
+    });
+  });
+}
+
+async function selectIcon(name) {
+  document.querySelectorAll('.icon-card-main').forEach(c => c.classList.remove('selected'));
+  const card = document.getElementById(`icard-${name}`);
+  if (card) card.classList.add('selected');
+
+  currentIconName = name;
+  currentIconSvg = await loadSvg(name);
+
+  document.getElementById('icon-detail-name').textContent = name;
+  document.getElementById('icon-detail-path').textContent = `assets/icons/${name}.svg`;
+
+  const preview = document.getElementById('icon-preview-box');
+  preview.innerHTML = currentIconSvg.replace(/<svg /, '<svg width="40" height="40" ');
+  const s = preview.querySelector('svg');
+  if (s) s.style.color = currentIconColor;
+
+  document.getElementById('icon-detail-panel').classList.add('open');
+  renderIconTab(currentIconTab);
+  card?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function switchIconTab(tab, btn) {
+  currentIconTab = tab;
+  document.querySelectorAll('#icon-code-tabs .code-tab').forEach(b => {
+    const isActive = b === btn;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+  renderIconTab(tab);
+}
+
+function renderIconTab(tab) {
+  const out = document.getElementById('icon-code-output');
+  if (!currentIconName) { out.textContent = '// Pilih ikon terlebih dahulu'; return; }
+  const name = currentIconName;
+  const pascal = name.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join('');
+  const rawSvg = currentIconSvg.trim();
+
+  const snippets = {
+    svg: rawSvg,
+    react: `import React from 'react';
+
+// Tempatkan SVG di src/components/icons/${pascal}Icon.tsx
+export function ${pascal}Icon({ size = 24, color = 'currentColor', ...props }) {
+  return (
+${rawSvg
+  .replace(/<svg[^>]*>/, `    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+         stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+         aria-hidden="true" {...props}>`)
+  .replace(/<\/svg>/, '    </svg>')
+  .split('\n').map(l => '    ' + l).join('\n')}
+  );
+}`,
+    html: `<!-- Gunakan sebagai img atau inline SVG -->
+<!-- Opsi 1: Inline SVG (direkomendasikan) -->
+${rawSvg}
+
+<!-- Opsi 2: Sebagai tag <img> -->
+<img src="../assets/icons/${name}.svg"
+     alt="${ICON_LABELS[name] || name}"
+     width="24" height="24"
+     style="color: var(--token-color-primary);">`,
+    compose: `import androidx.compose.foundation.Image
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import com.tembus.designsystem.TembusLightColors
+
+// Simpan SVG di res/drawable/${name.replace(/-/g,'_')}.xml (konversi via Android Studio)
+@Composable
+fun ${pascal}Icon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color(TembusLightColors.Primary)
+) {
+    Image(
+        painter = painterResource(R.drawable.${name.replace(/-/g,'_')}),
+        contentDescription = "${ICON_LABELS[name] || name}",
+        modifier = modifier,
+        colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(tint)
+    )
+}`,
+    swift: `import SwiftUI
+
+// Simpan SVG ke Assets.xcassets/${name} (pilih Preserve Vector Data)
+struct ${pascal}Icon: View {
+    var size: CGFloat = 24
+    var color: Color = Color(TembusColor.primary)
+
+    var body: some View {
+        Image("${name}")
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .frame(width: size, height: size)
+            .foregroundColor(color)
+            .accessibilityLabel("${ICON_LABELS[name] || name}")
+    }
+}`
+  };
+  out.textContent = snippets[tab] || '';
+}
+
+async function copySvgRaw() {
+  if (!currentIconSvg) {
+    showToast('Pilih ikon terlebih dahulu.');
+    return;
+  }
+  const copied = await copyText(currentIconSvg);
+  showToast(copied ? `SVG ${currentIconName} disalin!` : 'Clipboard tidak tersedia.');
+}
+
+async function copyIconSnippet(tab) {
+  const button = document.querySelector(`#icon-code-tabs .code-tab[onclick*="'${tab}'"]`);
+  if (button) switchIconTab(tab, button);
+  const out = document.getElementById('icon-code-output');
+  const copied = await copyText(out.textContent);
+  showToast(copied ? `Snippet ${tab} untuk ${currentIconName} disalin!` : 'Clipboard tidak tersedia.');
+}
+
+function setIconSize(size, btn) {
+  currentIconSize = size;
+  document.querySelectorAll('.icon-size-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed', 'false');
+  });
+  btn.classList.add('active');
+  btn.setAttribute('aria-pressed', 'true');
+  buildIconGrid(document.getElementById('icon-search').value);
+  if (currentIconName) selectIcon(currentIconName);
+}
+
+function setIconColor(color, btn) {
+  currentIconColor = color;
+  document.querySelectorAll('.icon-color-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed', 'false');
+  });
+  btn.classList.add('active');
+  btn.setAttribute('aria-pressed', 'true');
+  buildIconGrid(document.getElementById('icon-search').value);
+  const preview = document.getElementById('icon-preview-box');
+  if (preview.querySelector('svg')) preview.querySelector('svg').style.color = color;
+}
+
+function filterIcons(q) { buildIconGrid(q); }
+
+async function copyAllIconNames() {
+  const copied = await copyText(ICONS.join('\n'));
+  showToast(copied ? `Semua ${ICONS.length} nama ikon disalin!` : 'Clipboard tidak tersedia.');
+}
+
+// Init icon gallery
+buildIconGrid();
+
+// ═══════════════════════════════════════════════════════
+// FEATURE 2: Code Snippet Generator
+// ═══════════════════════════════════════════════════════
+const SNIPPET_DATA = {
+  'btn-primary': {
+    label: 'Tombol Primer',
+    preview: `<button class="btn btn-primary" type="button">Pesan Sekarang</button>`,
+    snippets: {
+      html: `<!-- Tombol Primer TEMBUS -->
+<!-- Pastikan tembus.css sudah di-import -->
+<button class="btn btn-primary" type="button">
+  Pesan Sekarang
+</button>
+
+<!-- Dengan ikon (gunakan SVG inline) -->
+<button class="btn btn-primary" type="button">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+    <path d="M14 8h4.5a2 2 0 0 1 1.6.8L22 11.5V17a1 1 0 0 1-1 1h-2"/>
+    <circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>
+  </svg>
+  Lacak Paket
+</button>`,
+      react: `import React from 'react';
+import './tembus.css';
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  loading?: boolean;
+  children: React.ReactNode;
+}
+
+export function ButtonPrimary({ loading, children, disabled, ...props }: ButtonProps) {
+  return (
+    <button
+      className="btn btn-primary"
+      type="button"
+      disabled={disabled || loading}
+      aria-busy={loading}
+      {...props}
+    >
+      {loading && (
+        <span className="spinner" aria-hidden="true" />
+      )}
+      <span>{children}</span>
+    </button>
+  );
+}
+
+// Usage:
+// <ButtonPrimary onClick={() => {}}>Pesan Sekarang</ButtonPrimary>
+// <ButtonPrimary loading>Memproses…</ButtonPrimary>`,
+      compose: `import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.tembus.designsystem.TembusLightColors
+import com.tembus.designsystem.TembusSpacing
+import com.tembus.designsystem.TembusSize
+import com.tembus.designsystem.TembusTypography
+
+@Composable
+fun TembusButtonPrimary(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+    enabled: Boolean = true
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.heightIn(min = TembusSize.MinTouchTarget),
+        enabled = enabled && !isLoading,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(TembusLightColors.Primary),
+            contentColor = Color(TembusLightColors.OnPrimary),
+            disabledContainerColor = Color(TembusLightColors.Primary).copy(alpha = 0.45f)
+        ),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(TembusSpacing.Md)
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(18.dp),
+                color = Color(TembusLightColors.OnPrimary),
+                strokeWidth = 2.dp
+            )
+            Spacer(Modifier.width(TembusSpacing.Sm))
+        }
+        Text(text = text, style = TembusTypography.BodySmall)
+    }
+}
+
+// Usage:
+// TembusButtonPrimary(text = "Pesan Sekarang", onClick = { /* ... */ })`,
+      swift: `import SwiftUI
+import com.tembus.designsystem // replace with your module
+
+struct TembusButtonPrimary: View {
+    let title: String
+    var isLoading: Bool = false
+    var isEnabled: Bool = true
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: TembusSpacing.sm) {
+                if isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .tint(Color(TembusColor.onPrimary))
+                        .scaleEffect(0.75)
+                }
+                Text(title)
+                    .font(.system(size: TembusTypography.bodySmall.size,
+                                  weight: .semibold))
+            }
+            .frame(maxWidth: .infinity)
+            .frame(minHeight: TembusSize.minTouchTarget)
+            .padding(.horizontal, TembusSpacing.xl)
+        }
+        .background(Color(TembusColor.primary))
+        .foregroundColor(Color(TembusColor.onPrimary))
+        .cornerRadius(TembusRadius.md)
+        .disabled(!isEnabled || isLoading)
+        .opacity((isEnabled && !isLoading) ? 1.0 : 0.45)
+        .scaleEffect(isEnabled ? 1.0 : 1.0)
+        .buttonStyle(ScaleButtonStyle())
+    }
+}
+
+struct ScaleButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
+    }
+}
+
+// Usage:
+// TembusButtonPrimary(title: "Pesan Sekarang") { /* action */ }`
+    }
+  },
+  'btn-secondary': {
+    label: 'Tombol Sekunder',
+    preview: `<button class="btn btn-secondary" type="button">Lihat Detail</button>`,
+    snippets: {
+      html: `<button class="btn btn-secondary" type="button">Lihat Detail</button>`,
+      react: `export function ButtonSecondary({ children, ...props }: ButtonProps) {
+  return (
+    <button className="btn btn-secondary" type="button" {...props}>
+      <span>{children}</span>
+    </button>
+  );
+}`,
+      compose: `Button(
+    onClick = onClick,
+    modifier = modifier.heightIn(min = TembusSize.MinTouchTarget),
+    colors = ButtonDefaults.outlinedButtonColors(
+        contentColor = Color(TembusLightColors.Primary)
+    ),
+    border = BorderStroke(2.dp, Color(TembusLightColors.Primary)),
+    shape = RoundedCornerShape(TembusSpacing.Md)
+) {
+    Text(text = text, style = TembusTypography.BodySmall)
+}`,
+      swift: `Button(action: action) {
+    Text(title)
+        .font(.system(size: TembusTypography.bodySmall.size, weight: .semibold))
+        .frame(minHeight: TembusSize.minTouchTarget)
+        .padding(.horizontal, TembusSpacing.xl)
+}
+.background(Color(TembusColor.surface))
+.foregroundColor(Color(TembusColor.primary))
+.overlay(RoundedRectangle(cornerRadius: TembusRadius.md).stroke(Color(TembusColor.primary), lineWidth: 2))
+.cornerRadius(TembusRadius.md)`
+    }
+  },
+  'btn-accent': {
+    label: 'Tombol Aksen',
+    preview: `<button class="btn btn-accent" type="button">Klaim Promo</button>`,
+    snippets: {
+      html: `<button class="btn btn-accent" type="button">Klaim Promo</button>`,
+      react: `export function ButtonAccent({ children, ...props }: ButtonProps) {
+  return (
+    <button className="btn btn-accent" type="button" {...props}>
+      <span>{children}</span>
+    </button>
+  );
+}`,
+      compose: `Button(
+    onClick = onClick,
+    colors = ButtonDefaults.buttonColors(
+        containerColor = Color(TembusLightColors.Accent),
+        contentColor = Color(TembusLightColors.OnAccent)
+    ),
+    shape = RoundedCornerShape(TembusSpacing.Md)
+) { Text(text) }`,
+      swift: `Button(action: action) { Text(title) }
+    .background(Color(TembusColor.accent))
+    .foregroundColor(Color(TembusColor.onAccent))
+    .cornerRadius(TembusRadius.md)`
+    }
+  },
+  'btn-destructive': {
+    label: 'Tombol Destruktif',
+    preview: `<button class="btn btn-destructive" type="button">Batalkan Pesanan</button>`,
+    snippets: {
+      html: `<!-- Selalu sertakan dialog konfirmasi sebelum aksi destruktif -->
+<button class="btn btn-destructive" type="button"
+        onclick="openConfirmDialog()">
+  Batalkan Pesanan
+</button>`,
+      react: `export function ButtonDestructive({ children, onConfirm, ...props }: ButtonProps & { onConfirm?: () => void }) {
+  const handleClick = () => {
+    if (window.confirm('Yakin membatalkan pesanan?')) onConfirm?.();
+  };
+  return (
+    <button className="btn btn-destructive" type="button" onClick={handleClick} {...props}>
+      <span>{children}</span>
+    </button>
+  );
+}`,
+      compose: `Button(
+    onClick = { showConfirmDialog = true },
+    colors = ButtonDefaults.buttonColors(
+        containerColor = Color(TembusLightColors.Error),
+        contentColor = Color(TembusLightColors.OnError)
+    )
+) { Text("Batalkan Pesanan") }`,
+      swift: `Button(role: .destructive, action: { showConfirm = true }) {
+    Text("Batalkan Pesanan")
+        .frame(minHeight: TembusSize.minTouchTarget)
+}
+.background(Color(TembusColor.error))
+.foregroundColor(Color(TembusColor.onError))
+.cornerRadius(TembusRadius.md)`
+    }
+  },
+  'chip-success': {
+    label: 'Chip Sukses',
+    preview: `<span class="chip chip-success"><span>&#10003;</span> Selesai</span>`,
+    snippets: {
+      html: `<span class="chip chip-success">
+  <span aria-hidden="true">&#10003;</span>
+  Selesai
+</span>`,
+      react: `export function ChipSuccess({ label }: { label: string }) {
+  return (
+    <span className="chip chip-success">
+      <span aria-hidden="true">✓</span>
+      {label}
+    </span>
+  );
+}
+// <ChipSuccess label="Selesai" />`,
+      compose: `@Composable
+fun TembusChipSuccess(label: String) {
+    Row(
+        modifier = Modifier
+            .background(
+                color = Color(TembusLightColors.SuccessSurface),
+                shape = RoundedCornerShape(999.dp)
+            )
+            .padding(horizontal = 14.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Text("✓", color = Color(TembusLightColors.Success),
+             style = TembusTypography.Label)
+        Text(label, color = Color(TembusLightColors.Success),
+             style = TembusTypography.Label)
+    }
+}`,
+      swift: `struct TembusChipSuccess: View {
+    let label: String
+    var body: some View {
+        HStack(spacing: 6) {
+            Text("✓").accessibilityHidden(true)
+            Text(label)
+        }
+        .font(.system(size: TembusTypography.label.size, weight: .semibold))
+        .foregroundColor(Color(TembusColor.success))
+        .padding(.horizontal, 14).padding(.vertical, 6)
+        .background(Color(TembusColor.successSurface))
+        .overlay(Capsule().stroke(Color(TembusColor.success).opacity(0.2), lineWidth: 1))
+        .clipShape(Capsule())
+    }
+}`
+    }
+  },
+  'chip-warning': {
+    label: 'Chip Peringatan',
+    preview: `<span class="chip chip-warning"><span>&#9888;</span> Menunggu Pembayaran</span>`,
+    snippets: {
+      html: `<span class="chip chip-warning">
+  <span aria-hidden="true">&#9888;</span>
+  Menunggu Pembayaran
+</span>`,
+      react: `<span className="chip chip-warning">
+  <span aria-hidden="true">⚠</span>
+  {label}
+</span>`,
+      compose: `Row(modifier=Modifier.background(Color(TembusLightColors.WarningSurface),RoundedCornerShape(999.dp)).padding(horizontal=14.dp,vertical=6.dp)) {
+    Text("⚠", color=Color(TembusLightColors.Warning), style=TembusTypography.Label)
+    Spacer(Modifier.width(6.dp))
+    Text(label, color=Color(TembusLightColors.Warning), style=TembusTypography.Label)
+}`,
+      swift: `HStack(spacing:6){Text("⚠").accessibilityHidden(true);Text(label)}.foregroundColor(Color(TembusColor.warning)).padding(.horizontal,14).padding(.vertical,6).background(Color(TembusColor.warningSurface)).clipShape(Capsule())`
+    }
+  },
+  'chip-error': {
+    label: 'Chip Error',
+    preview: `<span class="chip chip-error"><span>&#10005;</span> Dibatalkan</span>`,
+    snippets: {
+      html: `<span class="chip chip-error">
+  <span aria-hidden="true">&#10005;</span>
+  Dibatalkan
+</span>`,
+      react: `<span className="chip chip-error"><span aria-hidden>✕</span>{label}</span>`,
+      compose: `Row(modifier=Modifier.background(Color(TembusLightColors.ErrorSurface),RoundedCornerShape(999.dp)).padding(horizontal=14.dp,vertical=6.dp)) {
+    Text("✕",color=Color(TembusLightColors.Error),style=TembusTypography.Label)
+    Spacer(Modifier.width(6.dp))
+    Text(label,color=Color(TembusLightColors.Error),style=TembusTypography.Label)
+}`,
+      swift: `HStack(spacing:6){Text("✕").accessibilityHidden(true);Text(label)}.foregroundColor(Color(TembusColor.error)).padding(.horizontal,14).padding(.vertical,6).background(Color(TembusColor.errorSurface)).clipShape(Capsule())`
+    }
+  },
+  'chip-info': {
+    label: 'Chip Info',
+    preview: `<span class="chip chip-info"><span>&#9679;</span> Dalam Perjalanan</span>`,
+    snippets: {
+      html: `<span class="chip chip-info">
+  <span aria-hidden="true">&#9679;</span>
+  Dalam Perjalanan
+</span>`,
+      react: `<span className="chip chip-info"><span aria-hidden>●</span>{label}</span>`,
+      compose: `Row(modifier=Modifier.background(Color(TembusLightColors.InfoSurface),RoundedCornerShape(999.dp)).padding(horizontal=14.dp,vertical=6.dp)) {
+    Text("●",color=Color(TembusLightColors.Info),style=TembusTypography.Label)
+    Spacer(Modifier.width(6.dp))
+    Text(label,color=Color(TembusLightColors.Info),style=TembusTypography.Label)
+}`,
+      swift: `HStack(spacing:6){Circle().frame(width:8,height:8);Text(label)}.foregroundColor(Color(TembusColor.info)).padding(.horizontal,14).padding(.vertical,6).background(Color(TembusColor.infoSurface)).clipShape(Capsule())`
+    }
+  },
+  'input-normal': {
+    label: 'Input Normal',
+    preview: `<input class="input-control" placeholder="TMB-000123" style="max-width:240px;">`,
+    snippets: {
+      html: `<div class="form-group">
+  <label for="resi-input">
+    <span>Nomor Resi</span>
+    <span style="font-weight:normal;color:var(--token-color-foreground-muted)">Wajib</span>
+  </label>
+  <input id="resi-input"
+         class="input-control"
+         type="text"
+         placeholder="TMB-000123"
+         autocomplete="off">
+  <div class="helper-text">Format: TMB- dilanjutkan 6 digit angka.</div>
+</div>`,
+      react: `interface InputProps {
+  id: string;
+  label: string;
+  hint?: string;
+  placeholder?: string;
+  required?: boolean;
+}
+
+export function TembusInput({ id, label, hint, placeholder, required }: InputProps) {
+  return (
+    <div className="form-group">
+      <label htmlFor={id}>
+        <span>{label}</span>
+        {required && <span style={{color:'var(--token-color-foreground-muted)',fontWeight:'normal'}}>Wajib</span>}
+      </label>
+      <input id={id} className="input-control" placeholder={placeholder} />
+      {hint && <div className="helper-text">{hint}</div>}
+    </div>
+  );
+}`,
+      compose: `@Composable
+fun TembusTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    placeholder: String = "",
+    hint: String = "",
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Text(label, style = TembusTypography.Label,
+             color = Color(TembusLightColors.Foreground))
+        Spacer(Modifier.height(TembusSpacing.Xs))
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = { Text(placeholder, color = Color(TembusLightColors.ForegroundMuted)) },
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color(TembusLightColors.FocusRing),
+                unfocusedBorderColor = Color(TembusLightColors.InputBorder),
+                cursorColor = Color(TembusLightColors.Primary)
+            ),
+            modifier = Modifier.fillMaxWidth().heightIn(min = TembusSize.MinTouchTarget)
+        )
+        if (hint.isNotEmpty()) {
+            Spacer(Modifier.height(TembusSpacing.Xs))
+            Text(hint, style = TembusTypography.Caption,
+                 color = Color(TembusLightColors.ForegroundMuted))
+        }
+    }
+}`,
+      swift: `struct TembusTextField: View {
+    @Binding var text: String
+    let label: String
+    var placeholder: String = ""
+    var hint: String = ""
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: TembusSpacing.xs) {
+            Text(label)
+                .font(.system(size: TembusTypography.label.size, weight: .semibold))
+                .foregroundColor(Color(TembusColor.foreground))
+            TextField(placeholder, text: $text)
+                .frame(minHeight: TembusSize.minTouchTarget)
+                .padding(.horizontal, TembusSpacing.md)
+                .background(Color(TembusColor.inputBackground))
+                .overlay(
+                    RoundedRectangle(cornerRadius: TembusRadius.md)
+                        .stroke(Color(TembusColor.inputBorder), lineWidth: 1)
+                )
+            if !hint.isEmpty {
+                Text(hint)
+                    .font(.system(size: TembusTypography.caption.size))
+                    .foregroundColor(Color(TembusColor.foregroundMuted))
+            }
+        }
+    }
+}`
+    }
+  },
+  'input-error': {
+    label: 'Input Error',
+    preview: `<input class="input-control" value="0812" aria-invalid="true" style="max-width:240px;">`,
+    snippets: {
+      html: `<div class="form-group">
+  <label for="phone-error-input">Nomor Telepon</label>
+  <input id="phone-error-input"
+         class="input-control"
+         value="0812"
+         aria-invalid="true"
+         aria-describedby="phone-err-msg">
+  <div class="helper-text err" id="phone-err-msg">
+    <span aria-hidden="true">&#9888;</span>
+    Nomor telepon minimal 10 digit.
+  </div>
+</div>`,
+      react: `export function TembusInputError({ id, label, value, errorMsg }: InputProps & { value: string; errorMsg: string }) {
+  return (
+    <div className="form-group">
+      <label htmlFor={id}>{label}</label>
+      <input id={id} className="input-control" defaultValue={value}
+             aria-invalid="true" aria-describedby={\`\${id}-err\`} />
+      <div className="helper-text err" id={\`\${id}-err\`}>
+        <span aria-hidden="true">⚠</span> {errorMsg}
+      </div>
+    </div>
+  );
+}`,
+      compose: `OutlinedTextField(
+    value = value, onValueChange = onValueChange,
+    isError = true,
+    supportingText = {
+        Text(errorMsg, color = Color(TembusLightColors.Error),
+             style = TembusTypography.Caption)
+    },
+    colors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = Color(TembusLightColors.Error),
+        unfocusedBorderColor = Color(TembusLightColors.Error)
+    )
+)`,
+      swift: `VStack(alignment:.leading,spacing:TembusSpacing.xs) {
+    TextField(placeholder, text: $text)
+        .overlay(RoundedRectangle(cornerRadius:TembusRadius.md).stroke(Color(TembusColor.error),lineWidth:2))
+    HStack(spacing:4) {
+        Image(systemName:"exclamationmark.triangle.fill").foregroundColor(Color(TembusColor.error)).imageScale(.small)
+        Text(errorMsg).font(.system(size:TembusTypography.caption.size)).foregroundColor(Color(TembusColor.error))
+    }
+}`
+    }
+  },
+  'order-card': {
+    label: 'Kartu Order',
+    preview: `<div class="card order-tracking-card" style="max-width:340px;min-width:260px;"><div class="order-header"><div><span class="order-code">TMB-992104</span><div style="font-size:0.75rem;color:var(--token-color-foreground-secondary)">Instant Courier</div></div><span class="chip chip-info"><span>&#9679;</span> Dalam Pengantaran</span></div></div>`,
+    snippets: {
+      html: `<div class="card order-tracking-card">
+  <div class="order-header">
+    <div>
+      <span class="order-code">TMB-992104</span>
+      <div style="font-size:var(--token-type-caption);color:var(--token-color-foreground-secondary)">
+        Instant Courier &bull; Someday
+      </div>
+    </div>
+    <span class="chip chip-info">
+      <span aria-hidden="true">&#9679;</span>
+      Dalam Pengantaran
+    </span>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-step">
+      <div class="step-label">Toko Sumber Rejeki (Origin)</div>
+      <div class="step-detail">Jl. Gatot Subroto No. 12 &bull; Diambil 13:45</div>
+    </div>
+    <div class="timeline-step">
+      <div class="step-label">Penerima: Bapak Budi Santoso</div>
+      <div class="step-detail">Jl. Melati No. 8 &bull; Estimasi tiba 14:30</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:var(--token-spacing-md);margin-top:var(--token-spacing-lg);">
+    <button class="btn btn-primary" style="flex:1" type="button">Lacak Lokasi Kurir</button>
+    <button class="btn btn-secondary" type="button">Hubungi</button>
+  </div>
+</div>`,
+      react: `interface OrderCardProps {
+  orderCode: string;
+  serviceType: string;
+  status: 'info' | 'success' | 'warning' | 'error';
+  statusLabel: string;
+  origin: { name: string; address: string; time: string };
+  destination: { name: string; address: string; eta: string };
+  onTrack?: () => void;
+  onContact?: () => void;
+}
+
+export function OrderCard({
+  orderCode, serviceType, status, statusLabel, origin, destination, onTrack, onContact
+}: OrderCardProps) {
+  return (
+    <div className={\`card order-tracking-card\`}>
+      <div className="order-header">
+        <div>
+          <span className="order-code">{orderCode}</span>
+          <div style={{fontSize:'var(--token-type-caption)',color:'var(--token-color-foreground-secondary)'}}>
+            {serviceType}
+          </div>
+        </div>
+        <span className={\`chip chip-\${status}\`}>
+          <span aria-hidden="true">●</span> {statusLabel}
+        </span>
+      </div>
+      <div className="timeline">
+        <div className="timeline-step">
+          <div className="step-label">{origin.name}</div>
+          <div className="step-detail">{origin.address} · Diambil {origin.time}</div>
+        </div>
+        <div className="timeline-step">
+          <div className="step-label">{destination.name}</div>
+          <div className="step-detail">{destination.address} · ETA {destination.eta}</div>
+        </div>
+      </div>
+      <div style={{display:'flex',gap:'var(--token-spacing-md)',marginTop:'var(--token-spacing-lg)'}}>
+        <button className="btn btn-primary" style={{flex:1}} onClick={onTrack}>Lacak Kurir</button>
+        <button className="btn btn-secondary" onClick={onContact}>Hubungi</button>
+      </div>
+    </div>
+  );
+}`,
+      compose: `@Composable
+fun TembusOrderCard(
+    orderCode: String,
+    serviceType: String,
+    status: OrderStatus,
+    origin: AddressPoint,
+    destination: AddressPoint,
+    onTrack: () -> Unit,
+    onContact: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(TembusRadius.Lg),
+        colors = CardDefaults.cardColors(containerColor = Color(TembusLightColors.Surface)),
+        border = BorderStroke(1.dp, Color(TembusLightColors.Border))
+    ) {
+        Column(
+            modifier = Modifier
+                .border(start = BorderStroke(4.dp, Color(TembusLightColors.Primary)))
+                .padding(TembusSpacing.Xl)
+        ) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Column {
+                    Text(orderCode, style = TembusTypography.SectionTitle,
+                         fontFamily = FontFamily.Monospace)
+                    Text(serviceType, style = TembusTypography.Caption,
+                         color = Color(TembusLightColors.ForegroundSecondary))
+                }
+                TembusChip(label = status.label, variant = status.variant)
+            }
+            Spacer(Modifier.height(TembusSpacing.Lg))
+            TembusTimeline(origin = origin, destination = destination)
+            Spacer(Modifier.height(TembusSpacing.Lg))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(TembusSpacing.Md)) {
+                TembusButtonPrimary("Lacak Kurir", onTrack, Modifier.weight(1f))
+                TembusButtonSecondary("Hubungi", onContact)
+            }
+        }
+    }
+}`,
+      swift: `struct TembusOrderCard: View {
+    let orderCode: String
+    let serviceType: String
+    let statusLabel: String
+    let origin: AddressPoint
+    let destination: AddressPoint
+    var onTrack: () -> Void
+    var onContact: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: TembusSpacing.lg) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(orderCode)
+                        .font(.system(size: 18, weight: .bold, design: .monospaced))
+                    Text(serviceType)
+                        .font(.system(size: TembusTypography.caption.size))
+                        .foregroundColor(Color(TembusColor.foregroundSecondary))
+                }
+                Spacer()
+                TembusChipInfo(label: statusLabel)
+            }
+            TembusTimeline(origin: origin, destination: destination)
+            HStack(spacing: TembusSpacing.md) {
+                TembusButtonPrimary(title: "Lacak Kurir", action: onTrack)
+                TembusButtonSecondary(title: "Hubungi", action: onContact)
+            }
+        }
+        .padding(TembusSpacing.xl)
+        .background(Color(TembusColor.surface))
+        .overlay(RoundedRectangle(cornerRadius: TembusRadius.lg).stroke(Color(TembusColor.border), lineWidth: 1))
+        .overlay(alignment: .leading) {
+            RoundedRectangle(cornerRadius: 2).fill(Color(TembusColor.primary)).frame(width: 4)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: TembusRadius.lg))
+    }
+}`
+    }
+  }
+};
+
+let currentSnippetComp = 'btn-primary';
+let currentSnippetTab = 'html';
+
+function selectSnippetComp(key, btn) {
+  currentSnippetComp = key;
+  document.querySelectorAll('.snippet-comp-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed', 'false');
+  });
+  btn.classList.add('active');
+  btn.setAttribute('aria-pressed', 'true');
+  renderSnippetPreview();
+  renderSnippetCode();
+}
+
+function renderSnippetPreview() {
+  const d = SNIPPET_DATA[currentSnippetComp];
+  const area = document.getElementById('snippet-preview-area');
+  area.innerHTML = d ? d.preview : '';
+}
+
+function switchSnippetTab(tab, btn) {
+  currentSnippetTab = tab;
+  document.querySelectorAll('#snippet-code-tabs .code-tab').forEach(b => {
+    const isActive = b === btn;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+  renderSnippetCode();
+}
+
+function renderSnippetCode() {
+  const d = SNIPPET_DATA[currentSnippetComp];
+  const out = document.getElementById('snippet-output');
+  out.textContent = d?.snippets?.[currentSnippetTab] || '// Belum tersedia untuk platform ini.';
+}
+
+// init snippet generator
+renderSnippetPreview();
+renderSnippetCode();
+
+// ═══════════════════════════════════════════════════════
+// FEATURE 3: Tailwind Preset Generator
+// ═══════════════════════════════════════════════════════
+const TW_COLOR_NAMES = [
+  'background', 'surface', 'surface-raised', 'surface-subtle',
+  'foreground', 'foreground-secondary', 'foreground-muted',
+  'border', 'border-strong',
+  'primary', 'primary-light', 'primary-dark', 'primary-soft',
+  'accent', 'accent-dark', 'accent-light', 'accent-soft',
+  'success', 'success-surface', 'warning', 'warning-surface',
+  'error', 'error-surface', 'info', 'info-surface',
+  'dataviz-1', 'dataviz-2', 'dataviz-3', 'dataviz-4', 'dataviz-5', 'dataviz-6'
+];
+const TW_COLORS = TW_COLOR_NAMES.map(name => [name, `var(--token-color-${name})`]);
+
+const TW_PRESET_CONTENT = `/** TEMBUS Design System — Tailwind CSS Preset
+ * GENERATED from tokens/tembus.tokens.json v0.2.1
+ * Usage: require('@tembus/design-system/tailwind') in tailwind.config.js
+ */
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        // Semantic surface & foreground
+        'background':         'var(--token-color-background)',
+        'surface':            'var(--token-color-surface)',
+        'surface-raised':     'var(--token-color-surface-raised)',
+        'surface-subtle':     'var(--token-color-surface-subtle)',
+        'foreground':         'var(--token-color-foreground)',
+        'foreground-secondary':'var(--token-color-foreground-secondary)',
+        'foreground-muted':   'var(--token-color-foreground-muted)',
+        // Border
+        'border':             'var(--token-color-border)',
+        'border-strong':      'var(--token-color-border-strong)',
+        // Input
+        'input-bg':           'var(--token-color-input-background)',
+        'input-border':       'var(--token-color-input-border)',
+        'focus-ring':         'var(--token-color-focus-ring)',
+        // Brand
+        'primary':            'var(--token-color-primary)',
+        'primary-light':      'var(--token-color-primary-light)',
+        'primary-dark':       'var(--token-color-primary-dark)',
+        'primary-soft':       'var(--token-color-primary-soft)',
+        'primary-pale':       'var(--token-color-primary-pale)',
+        'on-primary':         'var(--token-color-on-primary)',
+        'accent':             'var(--token-color-accent)',
+        'accent-dark':        'var(--token-color-accent-dark)',
+        'accent-light':       'var(--token-color-accent-light)',
+        'accent-soft':        'var(--token-color-accent-soft)',
+        'on-accent':          'var(--token-color-on-accent)',
+        // Status
+        'success':            'var(--token-color-success)',
+        'on-success':         'var(--token-color-on-success)',
+        'success-surface':    'var(--token-color-success-surface)',
+        'warning':            'var(--token-color-warning)',
+        'on-warning':         'var(--token-color-on-warning)',
+        'warning-surface':    'var(--token-color-warning-surface)',
+        'error':              'var(--token-color-error)',
+        'on-error':           'var(--token-color-on-error)',
+        'error-surface':      'var(--token-color-error-surface)',
+        'info':               'var(--token-color-info)',
+        'on-info':            'var(--token-color-on-info)',
+        'info-surface':       'var(--token-color-info-surface)',
+        // Dataviz
+        'dataviz-1':          'var(--token-color-dataviz-1)',
+        'dataviz-2':          'var(--token-color-dataviz-2)',
+        'dataviz-3':          'var(--token-color-dataviz-3)',
+        'dataviz-4':          'var(--token-color-dataviz-4)',
+        'dataviz-5':          'var(--token-color-dataviz-5)',
+        'dataviz-6':          'var(--token-color-dataviz-6)',
+      },
+      spacing: {
+        'xs':  'var(--token-spacing-xs)',   // 4px
+        'sm':  'var(--token-spacing-sm)',   // 8px
+        'md':  'var(--token-spacing-md)',   // 12px
+        'lg':  'var(--token-spacing-lg)',   // 16px
+        'xl':  'var(--token-spacing-xl)',   // 20px
+        '2xl': 'var(--token-spacing-2xl)', // 24px
+        '3xl': 'var(--token-spacing-3xl)', // 32px
+      },
+      borderRadius: {
+        'sm':   'var(--token-radius-sm)',   // 8px
+        'md':   'var(--token-radius-md)',   // 12px
+        'lg':   'var(--token-radius-lg)',   // 16px
+        'pill': 'var(--token-radius-pill)', // 999px
+      },
+      zIndex: {
+        'base':     'var(--token-z-index-base)',     // 0
+        'dropdown': 'var(--token-z-index-dropdown)', // 1000
+        'sticky':   'var(--token-z-index-sticky)',   // 1020
+        'overlay':  'var(--token-z-index-overlay)',  // 1040
+        'modal':    'var(--token-z-index-modal)',    // 1050
+        'toast':    'var(--token-z-index-toast)',    // 1080
+      },
+      screens: {
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+      },
+    },
+  },
+};
+`;
+
+const TW_USAGE_CONTENT = `// tailwind.config.js — Cara menggunakan TEMBUS Tailwind Preset
+// ─────────────────────────────────────────────────────────────
+// Opsi 1: Pakai sebagai preset (direkomendasikan)
+const tembus = require('@tembus/design-system/tailwind');
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  // Scan semua file project
+  content: [
+    './src/**/*.{js,ts,jsx,tsx,html}',
+    './pages/**/*.{js,ts,jsx,tsx}',
+  ],
+  // Pasang TEMBUS preset
+  presets: [tembus],
+  // Tambahkan override project-spesifik di sini
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+
+// ─────────────────────────────────────────────────────────────
+// Opsi 2: Copy-paste langsung tanpa paket
+// Salin blok theme.extend dari preset ke tailwind.config.js Anda.
+
+// ─────────────────────────────────────────────────────────────
+// Contoh penggunaan kelas di HTML/JSX:
+//
+//   <button class="bg-primary text-on-primary rounded-md px-xl py-md">
+//     Pesan Sekarang
+//   </button>
+//
+//   <span class="bg-success-surface text-success rounded-pill px-md py-xs">
+//     Selesai
+//   </span>
+//
+//   <div class="border border-border rounded-lg shadow-sm z-modal">
+//     <!-- Modal content -->
+//   </div>
+`;
+
+let currentTwTab = 'preset';
+
+function switchTwTab(tab, btn) {
+  currentTwTab = tab;
+  document.querySelectorAll('#tw-code-tabs .code-tab').forEach(b => {
+    const isActive = b === btn;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+  document.getElementById('tw-code-output').textContent =
+    tab === 'preset' ? TW_PRESET_CONTENT : TW_USAGE_CONTENT;
+}
+
+function downloadTailwindPreset() {
+  const blob = new Blob([TW_PRESET_CONTENT], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'tembus.tailwind.cjs';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('File tembus.tailwind.cjs berhasil diunduh!');
+}
+
+// Build Tailwind color swatches
+(function buildTwSwatches() {
+  const grid = document.getElementById('tw-swatch-grid');
+  if (!grid) return;
+  TW_COLORS.forEach(([name, hex]) => {
+    const el = document.createElement('div');
+    el.className = 'tw-swatch';
+    el.title = `Klik untuk salin class Tailwind`;
+    el.innerHTML = `<div class="tw-swatch-color" style="background:${hex};"></div>
+      <div class="tw-swatch-label" style="padding:4px 6px;">${name}</div>`;
+    el.addEventListener('click', async () => {
+      const copied = await copyText(`text-${name}`);
+      showToast(copied ? `Disalin: text-${name} (atau bg-${name})` : 'Clipboard tidak tersedia.');
+    });
+    grid.appendChild(el);
+  });
+})();
+
+// Init tailwind preset code
+document.getElementById('tw-code-output').textContent = TW_PRESET_CONTENT;
+
+// ─────────────────────────────────────────────────────────────
+// Utility: Generic copy from pre element
+// ─────────────────────────────────────────────────────────────
+async function copyCurrent(preId) {
+  const el = document.getElementById(preId);
+  if (!el) return;
+  const copied = await copyText(el.textContent);
+  const btn = el.closest('.code-viewer')?.querySelector('.copy-btn');
+  if (btn) {
+    btn.textContent = copied ? '✓ Disalin!' : 'Gagal Menyalin';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Salin'; btn.classList.remove('copied'); }, 2000);
+  }
+  showToast(copied ? 'Kode disalin ke clipboard!' : 'Clipboard tidak tersedia.');
+}
+
+// Data Visualization Swatch Generator
+const datavizData = [
+  { id: 1, label: 'dataviz-1', role: 'Primer / Dominan' },
+  { id: 2, label: 'dataviz-2', role: 'Aksen / Sorotan' },
+  { id: 3, label: 'dataviz-3', role: 'Pembanding 1' },
+  { id: 4, label: 'dataviz-4', role: 'Pembanding 2' },
+  { id: 5, label: 'dataviz-5', role: 'Pembanding 3' },
+  { id: 6, label: 'dataviz-6', role: 'Baseline / Netral' }
+];
+
+const container = document.getElementById('dataviz-container');
+datavizData.forEach(item => {
+  const card = document.createElement('div');
+  card.className = 'dataviz-swatch';
+  card.title = 'Klik untuk salin token CSS';
+  card.innerHTML = `
+    <div class="swatch-color" style="background: var(--token-color-dataviz-${item.id})">
+      <span class="swatch-contrast-badge">&ge; 3.0:1</span>
+    </div>
+    <div class="swatch-name">var(--token-color-dataviz-${item.id})</div>
+    <div class="swatch-desc">${item.role}</div>
+  `;
+  card.addEventListener('click', async () => {
+    const copied = await copyText(`var(--token-color-dataviz-${item.id})`);
+    showToast(copied ? `Token disalin: var(--token-color-dataviz-${item.id})` : 'Clipboard tidak tersedia.');
+  });
+  container.appendChild(card);
+});
+
+// Theme Toggle
+const themeBtn = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+const themeText = document.getElementById('theme-text');
+
+themeBtn.addEventListener('click', () => {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  
+  themeIcon.innerHTML = isDark ? '&#9790;' : '&#9788;';
+  themeText.textContent = isDark ? 'Mode Gelap' : 'Mode Terang';
+  showToast(`Tema diubah ke ${isDark ? 'Mode Terang' : 'Mode Gelap'}`);
+});
+
+// Modal Logic with Keyboard Trap & Escape
+const modal = document.getElementById('demo-modal');
+function openModal() {
+  modal.classList.add('open');
+  const returnFocus = document.activeElement;
+  modal.querySelector('button.btn-destructive').focus();
+  
+  const handleKeydown = (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+      window.removeEventListener('keydown', handleKeydown);
+      if (returnFocus) returnFocus.focus();
+    }
+  };
+  window.addEventListener('keydown', handleKeydown);
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+}
+
+function confirmCancel() {
+  closeModal();
+  showToast('Pesanan telah berhasil dibatalkan.');
+}
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) closeModal();
+});
+
+// Toast System
+const toastContainer = document.getElementById('toast-container');
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span>&#9432;</span> <span>${message}</span>`;
+  toastContainer.appendChild(toast);
+  
+  // Trigger animation
+  requestAnimationFrame(() => {
+    toast.classList.add('show');
+  });
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 250);
+  }, 3200);
+}
+
+// Copy asset path helper
+async function copyAssetPath(path) {
+  const copied = await copyText(path);
+  showToast(copied ? `Path aset disalin: ${path}` : 'Clipboard tidak tersedia.');
+}
+
+// Presentation Slide Switcher
+function switchSlide(num) {
+  const tabs = document.querySelectorAll('.slide-tab');
+  const slides = document.querySelectorAll('.slide-content');
+  
+  tabs.forEach((tab, index) => {
+    const isActive = (index + 1) === num;
+    tab.classList.toggle('active', isActive);
+    tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    tab.setAttribute('tabindex', isActive ? '0' : '-1');
+  });
+
+  slides.forEach((slide, index) => {
+    const isActive = (index + 1) === num;
+    slide.classList.toggle('active', isActive);
+    slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+  });
+}
+
+// Keyboard interaction for every ARIA tablist (Arrow keys, Home, End).
+document.querySelectorAll('[role="tablist"]').forEach(list => {
+  list.addEventListener('keydown', event => {
+    const tabs = [...list.querySelectorAll('[role="tab"]')];
+    const current = tabs.indexOf(event.target);
+    if (current < 0) return;
+
+    let next = current;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (current + 1) % tabs.length;
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (current - 1 + tabs.length) % tabs.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = tabs.length - 1;
+    if (next === current) return;
+
+    event.preventDefault();
+    tabs[next].focus();
+    tabs[next].click();
+  });
+});
+
+// Copy presentation-theme.json helper
+async function copyTemplateTheme() {
+  const spec = {
+    name: "TEMBUS Corporate 16:9",
+    version: "0.2.1",
+    page: { width: 13.333, height: 7.5, unit: "in" },
+    safeArea: { top: 0.52, right: 0.68, bottom: 0.46, left: 0.68, unit: "in" },
+    fonts: { heading: "Aptos Display", body: "Aptos", fallback: ["Arial", "sans-serif"] },
+    colors: {
+      forest950: "#001F12",
+      forest900: "#002B18",
+      forest800: "#003A20",
+      forest600: "#0B6A3B",
+      emerald: "#006437",
+      emeraldLight: "#34D399",
+      orange: "#C2410C",
+      orangeBright: "#FF6A00",
+      paper: "#F7F8F7",
+      white: "#FFFFFF",
+      ink: "#14211A"
+    },
+    rules: {
+      oneMessagePerSlide: true,
+      maxAccentColorsPerSlide: 1,
+      orangeIsForEmphasisOnly: true,
+      includeSourceOnDataSlides: true
+    }
+  };
+  const copied = await copyText(JSON.stringify(spec, null, 2));
+  showToast(copied ? 'Spesifikasi presentation-theme.json disalin ke clipboard!' : 'Clipboard tidak tersedia.');
+}
 </script>
 </body>
 </html>

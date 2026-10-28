@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 — 2026-10-28
+
+- Added responsive layout breakpoint tokens (`breakpoint.sm`, `md`, `lg`, `xl`) to CSS, TypeScript, Kotlin, and SwiftUI.
+- Added predictable z-index layering tokens (`zIndex.base`, `dropdown`, `sticky`, `overlay`, `modal`, `toast`) across all platform targets.
+- Configured `package.json` with standard subpath `exports` (`./css`, `./tokens`, `./tokens.json`), `main`, and `types` for seamless package consumption.
+- Upgraded `gallery/index.html` into an interactive, high-fidelity showcase featuring accessible modals (with Escape & focus trapping), toast feedback, interactive order tracking patterns, and token copying.
+- Documented Breakpoint and Layering/Z-Index tokens in `docs/02-design-foundations.md` and updated `docs/05-platform-adoption.md`.
+
 ## 0.2.0 — 2026-10-28
 
 - Added a generator (`npm run build`) so CSS, TypeScript, Kotlin, and a new SwiftUI output all come from `tembus.tokens.json`. Kotlin now covers every color token plus typography, elevation, and motion; the old name mapping to a different repository was removed.

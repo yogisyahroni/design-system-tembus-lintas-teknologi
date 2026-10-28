@@ -2,21 +2,38 @@
 
 ## Web
 
-Import [`tokens/tembus.css`](../tokens/tembus.css) at the application boundary and use semantic variables:
+Import the CSS tokens at your application entrypoint:
+
+```javascript
+// In your main application or layout file:
+import '@tembus/design-system/css';
+```
+
+Or reference directly in HTML/CSS:
 
 ```css
+@import '@tembus/design-system/css';
+
 .primary-action {
   background: var(--token-color-primary);
   color: var(--token-color-on-primary);
   border-radius: var(--token-radius-md);
+  z-index: var(--token-z-index-base);
 }
 ```
 
 Do not copy values into component CSS. If a framework has its own theme system, map the semantic variables once at the adapter boundary.
 
-## TypeScript
+## TypeScript & JavaScript
 
-Use [`tokens/tembus.ts`](../tokens/tembus.ts) for non-CSS consumers, chart configuration, or typed design-system adapters. Keep semantic names stable so consumers do not depend on raw palette names.
+Use the typed token package for programmatic styling, chart configuration, or design-system adapters:
+
+```typescript
+import { tembusTokens, tembusThemes, tembusGlobal } from '@tembus/design-system';
+
+const brandGreen = tembusThemes.light.color.primary;
+const modalZIndex = tembusGlobal.zIndex.modal; // 1050
+```
 
 ## Generated outputs
 

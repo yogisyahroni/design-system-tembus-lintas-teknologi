@@ -1,4 +1,4 @@
-/* TEMBUS Design System 0.2.0
+/* TEMBUS Design System 0.2.1
  * GENERATED FILE. Do not edit by hand.
  * Source: tokens/tembus.tokens.json. Run `npm run build` after changing tokens.
  */
@@ -154,3 +154,20 @@ object TembusMotion {
     const val SlowMs = 300
     const val ReducedMs = 0
 }
+
+object TembusBreakpoint {
+    val Sm = 640.dp
+    val Md = 768.dp
+    val Lg = 1024.dp
+    val Xl = 1280.dp
+}
+
+object TembusZIndex {
+    const val Base = 0
+    const val Dropdown = 1000
+    const val Sticky = 1020
+    const val Overlay = 1040
+    const val Modal = 1050
+    const val Toast = 1080
+}
+
